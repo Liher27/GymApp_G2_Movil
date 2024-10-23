@@ -67,23 +67,23 @@ class RegisterActivity : AppCompatActivity() {
             if(registerName.isNotEmpty()&&registerSurname.isNotEmpty()&&registerEmail.isNotEmpty()&&registerPassword.isNotEmpty()&&
                 registerDate.isNotEmpty()){
                 val newUser = users(registerName,
-                        registerSurname,
-                        registerEmail,
-                        registerPassword,
-                        istrainer,
-                        date)
+                    registerSurname,
+                    registerEmail,
+                    registerPassword,
+                    istrainer,
+                    date)
                 db.collection("users").document(registerName).set(newUser)
             }
             else{
                 Toast.makeText(this,"Hay campos que estan vacios,Rellenarlos por favor",Toast.LENGTH_SHORT).show()
             }
-                }
         }
-        }
+    }
+}
 fun userNames ( name : String, surname:String,mail : String, pass : String , trainer : String,date : Date?){
     val db = Firebase.firestore
     db.collection("users").whereEqualTo("mail", mail).get().addOnSuccessListener {
-        querySnapshot ->
+            querySnapshot ->
         if (querySnapshot.isEmpty) {
             val newUser = users(
                 name,
