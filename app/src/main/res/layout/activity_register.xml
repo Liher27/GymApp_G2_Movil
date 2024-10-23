@@ -110,7 +110,7 @@
         android:outlineAmbientShadowColor="#FFFFFF"
         android:outlineSpotShadowColor="#FFFFFF"
         android:shadowColor="#FFFFFF"
-        android:text="@string/errekafit"
+        android:text="@string/registro"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="#EF6C00"

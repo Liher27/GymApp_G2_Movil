@@ -15,6 +15,14 @@
     <string name="editTextSurname">Apellido</string>
     <string name="editTextTextPassword">Contraseña</string>
     <string name="spinner">Tipo de usuario</string>
+    <string name="registro">REGISTRO</string>
+    <string name="NameInputText">Name\n</string>
+    <string name="Surname">Surname</string>
+    <string name="Mail">Correo</string>
+    <string name="FechaDeNacimiento">Fecha de nacimiento</string>
+    <string name="User">hint</string>
+    <string name="SwitchThemeChager">Light Mode</string>
+    <string name="buttonBack">Button</string>
     <string-array name="userType">
        <item>Cliente</item>
        <item>Trainer</item>

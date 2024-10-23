@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.FirebaseFirestore
 
 
-class MainActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity() {
 
     private lateinit var emailEditText: EditText
     private lateinit var passEditText: EditText
@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         }
         val registrer: TextView = findViewById(R.id.textViewRegister)
         registrer.setOnClickListener {
-            val intent = Intent(this@MainActivity, RegisterActivity::class.java)
+            val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
             startActivity(intent)
         }
     }
@@ -64,14 +64,14 @@ class MainActivity : AppCompatActivity() {
                 }
                 if (isAuthenticated) {
                     Toast.makeText(
-                        this@MainActivity,
+                        this@LoginActivity,
                         "Credenciales Correctas",
                         Toast.LENGTH_SHORT
                     ).show()
 
                 } else {
                     Toast.makeText(
-                        this@MainActivity,
+                        this@LoginActivity,
                         "Credenciales incorrectas",
                         Toast.LENGTH_SHORT
                     ).show()
@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
             }
             .addOnFailureListener { exception ->
                 Toast.makeText(
-                    this@MainActivity,
+                    this@LoginActivity,
                     "Error al leer datos de Firestore",
                     Toast.LENGTH_SHORT
                 ).show()
