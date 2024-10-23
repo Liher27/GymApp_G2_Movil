@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">GymAppXML</string>
+    <string name="inicia_sesion_para_continuar">Inicia sesion para continuar</string>
+    <string name="editTextLogin">Login</string>
+    <string name="errekafit">ERREKAFIT</string>
+    <string name="login">Login</string>
+    <string name="no_tienes_cuenta_registrate">No tienes cuenta? Registrate!</string>
+    <string name="todo">TODO</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="enter_user">enter_user\n</string>
+    <string name="loginTextView">Login</string>
+    <string name="editTextname">Nombre</string>
+    <string name="editTextDate">Fecha de Nacimiento</string>
+    <string name="editTextTextEmailAddress">Correo</string>
+    <string name="editTextSurname">Apellido</string>
+    <string name="editTextTextPassword">Contraseña</string>
+    <string name="spinner">Tipo de usuario</string>
+    <string-array name="userType">
+       <item>Cliente</item>
+       <item>Trainer</item>
+    </string-array>
+</resources>

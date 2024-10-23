@@ -1,0 +1,86 @@
+{
+  "project_info": {
+    "project_number": "155528875056",
+    "project_id": "reto-1-grupo-2",
+    "storage_bucket": "reto-1-grupo-2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:155528875056:android:33d4006e91d983be28b1f5",
+        "android_client_info": {
+          "package_name": "com.example.gymappgrupo2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqHS1nD9qUCpBQ43uCeTPk5Q96uxNuWWY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:155528875056:android:d189a7958655c71f28b1f5",
+        "android_client_info": {
+          "package_name": "com.example.gymappxml"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqHS1nD9qUCpBQ43uCeTPk5Q96uxNuWWY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:155528875056:android:8402a3bb8295309828b1f5",
+        "android_client_info": {
+          "package_name": "com.example.intentsexplicitos"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqHS1nD9qUCpBQ43uCeTPk5Q96uxNuWWY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:155528875056:android:8dd1ad7fb59dac5528b1f5",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqHS1nD9qUCpBQ43uCeTPk5Q96uxNuWWY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
