@@ -16,7 +16,7 @@ import java.util.Date
 import java.util.Locale
 
 class RegisterActivity : AppCompatActivity() {
-
+    private lateinit var activity: RegisterActivity
     private lateinit var buttonRegister: Button
     private lateinit var registerNameEditText : EditText
     private lateinit var registerSurnameEditText :EditText
@@ -66,45 +66,37 @@ class RegisterActivity : AppCompatActivity() {
             }
             if(registerName.isNotEmpty()&&registerSurname.isNotEmpty()&&registerEmail.isNotEmpty()&&registerPassword.isNotEmpty()&&
                 registerDate.isNotEmpty()){
-                val newUser = users(registerName,
+                userNames (registerName,
                     registerSurname,
                     registerEmail,
                     registerPassword,
                     istrainer,
                     date)
-                db.collection("users").document(registerName).set(newUser)
             }
             else{
                 Toast.makeText(this,"Hay campos que estan vacios,Rellenarlos por favor",Toast.LENGTH_SHORT).show()
             }
         }
     }
-}
-fun userNames ( name : String, surname:String,mail : String, pass : String , trainer : String,date : Date?){
-    val db = Firebase.firestore
-    db.collection("users").whereEqualTo("mail", mail).get().addOnSuccessListener {
-            querySnapshot ->
-        if (querySnapshot.isEmpty) {
-            val newUser = users(
-                name,
-                surname,
-                mail,
-                pass,
-                trainer,
-                date
-            )
-            db.collection("users").document(name).set(newUser)
-                .addOnSuccessListener {
-                }
-                .addOnFailureListener { e ->
+    private fun userNames(name: String, surname: String, mail: String, pass: String, trainer: String, date: Date?) {
+        val db = Firebase.firestore
 
+        db.collection("users").whereEqualTo("mail", mail).get().addOnSuccessListener { querySnapshot ->
+            when {
+                querySnapshot.isEmpty -> {
+                    val newUser = users(name, surname, mail, pass, trainer, date)
+                    db.collection("users").document(name).set(newUser)
+                    Toast.makeText(this,"Se ha registrado correctamente",Toast.LENGTH_SHORT).show()
                 }
-        } else {
+
+                else -> {
+                    Toast.makeText(this,"El correo electronico ya esta utilizado",Toast.LENGTH_SHORT).show()
+                }
+            }
+        }.addOnFailureListener { e ->
 
         }
     }
-        .addOnFailureListener { e ->
-
-        }
 }
+
 
