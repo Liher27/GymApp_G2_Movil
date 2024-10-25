@@ -12,12 +12,14 @@
         tools:layout_editor_absoluteY="0dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/textInputEditText"
+            android:id="@+id/NameFiled"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/NameInputText"
-            app:layout_constraintBottom_toTopOf="@+id/editText"
-            app:layout_constraintTop_toBottomOf="@+id/editText5"
+            app:layout_constraintBottom_toTopOf="@+id/SurNameFiled"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/userIdFiled"
             tools:ignore="DuplicateSpeakableTextCheck,VisualLintTextFieldSize" />
 
         <com.google.android.material.textfield.TextInputEditText
@@ -27,50 +29,60 @@
             android:hint="@string/User"
             android:minHeight="48dp"
             app:layout_constraintBottom_toTopOf="@+id/button3"
-            app:layout_constraintTop_toBottomOf="@+id/editText3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dateFiled"
             tools:ignore="VisualLintTextFieldSize" />
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editText"
+            android:id="@+id/SurNameFiled"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/Surname"
             android:minHeight="48dp"
-            app:layout_constraintBottom_toTopOf="@+id/editText2"
-            app:layout_constraintTop_toBottomOf="@+id/textInputEditText"
+            app:layout_constraintBottom_toTopOf="@+id/emailFiled"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/NameFiled"
             tools:ignore="DuplicateSpeakableTextCheck,VisualLintTextFieldSize" />
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editText5"
+            android:id="@+id/userIdFiled"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/userName"
             android:minHeight="48dp"
-            app:layout_constraintBottom_toTopOf="@+id/textInputEditText"
+            app:layout_constraintBottom_toTopOf="@+id/NameFiled"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/switch1"
             app:layout_constraintVertical_chainStyle="packed"
-            tools:ignore="DuplicateSpeakableTextCheck,VisualLintTextFieldSize"
-            tools:layout_editor_absoluteX="2dp" />
+            tools:ignore="DuplicateSpeakableTextCheck,VisualLintTextFieldSize" />
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editText2"
+            android:id="@+id/emailFiled"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/Mail"
             android:minHeight="48dp"
-            app:layout_constraintBottom_toTopOf="@+id/editText3"
-            app:layout_constraintTop_toBottomOf="@+id/editText"
+            app:layout_constraintBottom_toTopOf="@+id/dateFiled"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/SurNameFiled"
             tools:ignore="DuplicateSpeakableTextCheck,VisualLintTextFieldSize" />
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editText3"
+            android:id="@+id/dateFiled"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/birthDate"
             android:minHeight="48dp"
             android:textColorHint="#546E7A"
             app:layout_constraintBottom_toTopOf="@+id/editText4"
-            app:layout_constraintTop_toBottomOf="@+id/editText2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/emailFiled"
             tools:ignore="VisualLintTextFieldSize" />
 
         <Button
@@ -80,7 +92,7 @@
             android:text="@string/buttonBack"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_bias="0.6"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editText4"
             app:layout_constraintVertical_bias="0.5"

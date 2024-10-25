@@ -13,6 +13,7 @@ firebaseDatabaseKtx = "21.0.0"
 firebaseFirestoreKtx = "25.1.0"
 googleGmsGoogleServices = "4.4.2"
 firebaseFirestore = "25.1.0"
+playServicesLocation = "21.3.0"
 uiTextAndroid = "1.7.4"
 
 [libraries]
@@ -28,6 +29,7 @@ firebase-database-ktx = { group = "com.google.firebase", name = "firebase-databa
 firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
 androidx-ui-text-android = { group = "androidx.compose.ui", name = "ui-text-android", version.ref = "uiTextAndroid" }
+play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

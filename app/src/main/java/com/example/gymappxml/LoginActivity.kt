@@ -16,7 +16,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var emailEditText: EditText
     private lateinit var passEditText: EditText
     private lateinit var db: FirebaseFirestore
-
+    private lateinit var useid: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -33,6 +33,8 @@ class LoginActivity : AppCompatActivity() {
 
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 checkUserCredentials(email, password)
+
+
             } else {
                 Toast.makeText(this, "Por favor, rellena todos los campos.", Toast.LENGTH_SHORT)
                     .show()
@@ -58,6 +60,12 @@ class LoginActivity : AppCompatActivity() {
 
                     if (userEmail.equals(mail,true)  && userPassword.equals(pass,false)) {
                         isAuthenticated = true
+                        useid = document.id
+                        val intentProfileActivity = Intent(this,WorkoutsActivity::class.java).apply {
+                            putExtra("id",useid)
+                        }
+                        startActivity(intentProfileActivity)
+                        Log.i("this user id ", "is $useid")
                         break
                     }
                 }

@@ -36,7 +36,7 @@ class RegisterActivity : AppCompatActivity() {
         registerPasswordEditText = findViewById(R.id.editTextTextPassword)
         registerDateEditText = findViewById(R.id.editTextDate)
 
-        var istrainer: String
+        var istrainer: Boolean
 
         Firebase.firestore
         val spinner : Spinner = findViewById(R.id.spinner)
@@ -60,10 +60,11 @@ class RegisterActivity : AppCompatActivity() {
             val registerEmail = registerEmailEditText.text.toString()
             val registerPassword = registerPasswordEditText.text.toString()
             val registerDate = registerDateEditText.text.toString()
-            if(spinner.selectedItem.equals("Cliente")){
-                istrainer = "Cliente"
+            val level = 0
+            istrainer = if(spinner.selectedItem.equals("Cliente")){
+                false
             }else{
-                istrainer = "Trainer"
+                true
             }
             val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
             val date = try {
@@ -78,20 +79,21 @@ class RegisterActivity : AppCompatActivity() {
                     registerEmail,
                     registerPassword,
                     istrainer,
-                    date)
+                    date,
+                    level)
             }
             else{
                 Toast.makeText(this,"Hay campos que estan vacios,Rellenarlos por favor",Toast.LENGTH_SHORT).show()
             }
         }
     }
-    private fun userNames(name: String, surname: String, mail: String, pass: String, trainer: String, date: Date?) {
+    private fun userNames(name: String, surname: String, mail: String, pass: String, trainer: Boolean, date: Date?, level : Int) {
         val db = Firebase.firestore
 
         db.collection("users").whereEqualTo("mail", mail).get().addOnSuccessListener { querySnapshot ->
             when {
                 querySnapshot.isEmpty -> {
-                    val newUser = users(name, surname, mail, pass, trainer, date)
+                    val newUser = users(name, surname, mail, pass, trainer, date,level)
                     db.collection("users").document(name).set(newUser)
                     Toast.makeText(this,"Se ha registrado correctamente",Toast.LENGTH_SHORT).show()
                 }
