@@ -1,6 +1,5 @@
 package com.example.gymappxml
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -18,10 +17,9 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var passEditText: EditText
     private lateinit var db: FirebaseFirestore
 
-    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_login)
 
         db = FirebaseFirestore.getInstance()
 
@@ -40,8 +38,8 @@ class LoginActivity : AppCompatActivity() {
                     .show()
             }
         }
-        val registrer: TextView = findViewById(R.id.textViewRegister)
-        registrer.setOnClickListener {
+        val register: TextView = findViewById(R.id.textViewRegister)
+        register.setOnClickListener {
             val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
             startActivity(intent)
             finish()
@@ -69,7 +67,9 @@ class LoginActivity : AppCompatActivity() {
                         "Credenciales Correctas",
                         Toast.LENGTH_SHORT
                     ).show()
-
+                    val intent = Intent(this@LoginActivity, WorkoutsActivity::class.java)
+                    startActivity(intent)
+                    finish()
                 } else {
                     Toast.makeText(
                         this@LoginActivity,

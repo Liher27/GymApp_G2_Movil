@@ -8,8 +8,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="-112dp"
-        tools:layout_editor_absoluteY="-362dp">
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/textInputEditText"
@@ -17,12 +17,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/NameInputText"
             app:layout_constraintBottom_toTopOf="@+id/editText"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.5"
-            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintTop_toBottomOf="@+id/editText5"
             tools:ignore="DuplicateSpeakableTextCheck,VisualLintTextFieldSize" />
 
         <com.google.android.material.textfield.TextInputEditText
@@ -31,12 +26,8 @@
             android:layout_height="wrap_content"
             android:hint="@string/User"
             android:minHeight="48dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/button3"
             app:layout_constraintTop_toBottomOf="@+id/editText3"
-            app:layout_constraintVertical_bias="0.5"
             tools:ignore="VisualLintTextFieldSize" />
 
         <com.google.android.material.textfield.TextInputEditText
@@ -46,12 +37,20 @@
             android:hint="@string/Surname"
             android:minHeight="48dp"
             app:layout_constraintBottom_toTopOf="@+id/editText2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textInputEditText"
-            app:layout_constraintVertical_bias="0.5"
             tools:ignore="DuplicateSpeakableTextCheck,VisualLintTextFieldSize" />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editText5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/userName"
+            android:minHeight="48dp"
+            app:layout_constraintBottom_toTopOf="@+id/textInputEditText"
+            app:layout_constraintTop_toBottomOf="@+id/switch1"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:ignore="DuplicateSpeakableTextCheck,VisualLintTextFieldSize"
+            tools:layout_editor_absoluteX="2dp" />
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editText2"
@@ -60,26 +59,18 @@
             android:hint="@string/Mail"
             android:minHeight="48dp"
             app:layout_constraintBottom_toTopOf="@+id/editText3"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editText"
-            app:layout_constraintVertical_bias="0.5"
             tools:ignore="DuplicateSpeakableTextCheck,VisualLintTextFieldSize" />
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editText3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/FechaDeNacimiento"
+            android:hint="@string/birthDate"
             android:minHeight="48dp"
             android:textColorHint="#546E7A"
             app:layout_constraintBottom_toTopOf="@+id/editText4"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editText2"
-            app:layout_constraintVertical_bias="0.5"
             tools:ignore="VisualLintTextFieldSize" />
 
         <Button
@@ -112,7 +103,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_begin="58dp" />
+            app:layout_constraintGuide_begin="71dp" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline8"
@@ -120,6 +111,30 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_begin="279dp" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:layout_width="173dp"
+            android:layout_height="45dp"
+            app:layout_constraintBottom_toTopOf="@+id/guideline7"
+            app:layout_constraintEnd_toStartOf="@+id/guideline8"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="TextSizeCheck">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/changeSpanish"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/changeEnglish"
+                tools:ignore="VisualLintBounds,TouchTargetSizeCheck" />
+        </com.google.android.material.chip.ChipGroup>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

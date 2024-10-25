@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">GymAppXML</string>
-    <string name="inicia_sesion_para_continuar">Inicia sesion para continuar</string>
+    <string name="LoginToStart">Inicia sesion para continuar</string>
     <string name="editTextLogin">Login</string>
     <string name="errekafit">ERREKAFIT</string>
     <string name="login">Login</string>
-    <string name="no_tienes_cuenta_registrate">No tienes cuenta? Registrate!</string>
+    <string name="noAccountTextView">No tienes cuenta? Registrate!</string>
     <string name="todo">TODO</string>
     <string name="enter_password">Enter Password</string>
     <string name="enter_user">enter_user\n</string>
@@ -15,16 +15,20 @@
     <string name="editTextSurname">Apellido</string>
     <string name="editTextTextPassword">Contraseña</string>
     <string name="spinner">Tipo de usuario</string>
-    <string name="registro">REGISTRO</string>
+    <string name="register">REGISTRO</string>
     <string name="NameInputText">Name\n</string>
     <string name="Surname">Surname</string>
     <string name="Mail">Correo</string>
-    <string name="FechaDeNacimiento">Fecha de nacimiento</string>
-    <string name="User">hint</string>
+    <string name="birthDate">Fecha de nacimiento</string>
+    <string name="User">UserName</string>
     <string name="SwitchThemeChager">Light Mode</string>
     <string name="buttonBack">Button</string>
+    <string name="changeSpanish">Español</string>
+    <string name="changeEnglish">English</string>
+    <string name="userName">userName\n</string>
+    <string name="changeToProfile">Button</string>
     <string-array name="userType">
-       <item>Cliente</item>
+       <item>Client</item>
        <item>Trainer</item>
     </string-array>
 </resources>

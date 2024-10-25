@@ -1,11 +1,12 @@
 package com.example.gymappxml
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.Firebase
@@ -16,7 +17,7 @@ import java.util.Date
 import java.util.Locale
 
 class RegisterActivity : AppCompatActivity() {
-    private lateinit var activity: RegisterActivity
+
     private lateinit var buttonRegister: Button
     private lateinit var registerNameEditText : EditText
     private lateinit var registerSurnameEditText :EditText
@@ -35,9 +36,9 @@ class RegisterActivity : AppCompatActivity() {
         registerPasswordEditText = findViewById(R.id.editTextTextPassword)
         registerDateEditText = findViewById(R.id.editTextDate)
 
-        var istrainer: String = ""
+        var istrainer: String
 
-        val db = Firebase.firestore
+        Firebase.firestore
         val spinner : Spinner = findViewById(R.id.spinner)
         ArrayAdapter.createFromResource(
             this,R.array.userType,
@@ -45,6 +46,12 @@ class RegisterActivity : AppCompatActivity() {
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinner.adapter = adapter
+        }
+        val register :TextView = findViewById(R.id.textView)
+        register.setOnClickListener {
+            val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
         }
         buttonRegister.setOnClickListener {
 
