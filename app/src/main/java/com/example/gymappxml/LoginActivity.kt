@@ -56,7 +56,7 @@ class LoginActivity : AppCompatActivity() {
                     val userEmail = document.getString("mail")
                     val userPassword = document.getString("pass")
 
-                    if (userEmail == mail && userPassword == pass) {
+                    if (userEmail.equals(mail,true)  && userPassword.equals(pass,false)) {
                         isAuthenticated = true
                         break
                     }
