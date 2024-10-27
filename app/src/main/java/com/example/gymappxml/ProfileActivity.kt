@@ -1,16 +1,15 @@
 package com.example.gymappxml
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.ui.text.intl.Locale
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
-import pojo.users
 import java.text.SimpleDateFormat
-import kotlin.text.format
+import com.example.gymappxml.WorkoutsActivity
 
 class ProfileActivity : AppCompatActivity() {
     private lateinit var userFiled : EditText
@@ -30,7 +29,14 @@ class ProfileActivity : AppCompatActivity() {
         userEmailFiled = findViewById(R.id.emailFiled)
         userBirtyDateFiled = findViewById(R.id.dateFiled)
 
+        val backButton : Button = findViewById(R.id.button5)
         val button : Button = findViewById(R.id.button3)
+
+        backButton.setOnClickListener{
+            val intent = Intent(this@ProfileActivity, WorkoutsActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
 
         button.setOnClickListener {
             showUserData()

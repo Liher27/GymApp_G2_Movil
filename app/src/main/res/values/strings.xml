@@ -3,12 +3,19 @@
     <string name="LoginToStart">Inicia sesion para continuar</string>
     <string name="editTextLogin">Login</string>
     <string name="errekafit">ERREKAFIT</string>
+    <string name="workouts">WORKOUTS</string>
     <string name="login">Login</string>
     <string name="noAccountTextView">No tienes cuenta? Registrate!</string>
     <string name="todo">TODO</string>
     <string name="enter_password">Enter Password</string>
-    <string name="enter_user">enter_user\n</string>
-    <string name="loginTextView">Login</string>
+    <string name="userLogin">Usuario</string>
+    <string name="filterHint">Filtrar por nivel</string>
+    <string name="filterButton">Filtrar</string>
+    <string name="trainerButton">Entrenador</string>
+    <string name="userLvl">Nivel de usuario: </string>
+    <string name="passLogin">Contraseña</string>
+    <string name="enter_user">enter_user</string>
+    <string name="loginTextView">Inicio de sesión</string>
     <string name="editTextname">Nombre</string>
     <string name="editTextDate">Fecha de Nacimiento</string>
     <string name="editTextTextEmailAddress">Correo</string>
@@ -22,11 +29,12 @@
     <string name="birthDate">Fecha de nacimiento</string>
     <string name="User">UserName</string>
     <string name="SwitchThemeChager">Light Mode</string>
-    <string name="buttonBack">Button</string>
+    <string name="buttonBack">Volver</string>
+    <string name="loadInfo">Cargar informacion</string>
     <string name="changeSpanish">Español</string>
     <string name="changeEnglish">English</string>
     <string name="userName">userName\n</string>
-    <string name="changeToProfile">Button</string>
+    <string name="changeToProfile">Perfil</string>
     <string-array name="userType">
        <item>Client</item>
        <item>Trainer</item>
