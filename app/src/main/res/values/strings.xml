@@ -35,6 +35,7 @@
     <string name="changeEnglish">English</string>
     <string name="userName">userName\n</string>
     <string name="changeToProfile">Perfil</string>
+    <string name="estrainer">Es entrenador?</string>
     <string-array name="userType">
        <item>Client</item>
        <item>Trainer</item>

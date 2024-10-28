@@ -58,12 +58,13 @@ class LoginActivity : AppCompatActivity() {
                     val userEmail = document.getString("mail")
                     val userPassword = document.getString("pass")
 
-                    if (userEmail.equals(mail,true)  && userPassword.equals(pass,false)) {
+                    if (userEmail.equals(mail, true) && userPassword.equals(pass, false)) {
                         isAuthenticated = true
                         useid = document.id
-                        val intentProfileActivity = Intent(this,WorkoutsActivity::class.java).apply {
-                            putExtra("id",useid)
-                        }
+                        val intentProfileActivity =
+                            Intent(this, WorkoutsActivity::class.java).apply {
+                                putExtra("id", useid)
+                            }
                         startActivity(intentProfileActivity)
                         Log.i("this user id ", "is $useid")
                         break
@@ -75,9 +76,6 @@ class LoginActivity : AppCompatActivity() {
                         "Credenciales Correctas",
                         Toast.LENGTH_SHORT
                     ).show()
-                    val intent = Intent(this@LoginActivity, WorkoutsActivity::class.java)
-                    startActivity(intent)
-                    finish()
                 } else {
                     Toast.makeText(
                         this@LoginActivity,

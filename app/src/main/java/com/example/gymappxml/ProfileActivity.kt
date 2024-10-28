@@ -17,6 +17,7 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var userSurnameFiled : EditText
     private lateinit var userEmailFiled : EditText
     private lateinit var userBirtyDateFiled : EditText
+    private lateinit var userType : EditText
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,6 +29,7 @@ class ProfileActivity : AppCompatActivity() {
         userSurnameFiled = findViewById(R.id.SurNameFiled)
         userEmailFiled = findViewById(R.id.emailFiled)
         userBirtyDateFiled = findViewById(R.id.dateFiled)
+        userType = findViewById(R.id.editText4)
 
         val backButton : Button = findViewById(R.id.button5)
         val button : Button = findViewById(R.id.button3)
@@ -60,6 +62,13 @@ class ProfileActivity : AppCompatActivity() {
                         val userSurname = document.getString("surname")
                         val userEmail = document.getString("mail")
                         val userBirtyDate = document.getDate("birtyDate")
+                        val isTrainer = document.getBoolean("trainer")
+
+                        if (isTrainer == true){
+                            userType.setText("Entrenador")
+                        }else{
+                            userType.setText("Cliente")
+                        }
 
                         userFiled.setText(userId)
                         userNameFiled.setText(userName)
@@ -71,7 +80,7 @@ class ProfileActivity : AppCompatActivity() {
                         val formattedBirthDate = userBirtyDate?.let { dateFormat.format(it) } ?: ""
                         userBirtyDateFiled.setText(formattedBirthDate)
 
-                        Log.i("attr", "userName: $userName")
+
                     }
                 }
                 .addOnFailureListener { exception ->
