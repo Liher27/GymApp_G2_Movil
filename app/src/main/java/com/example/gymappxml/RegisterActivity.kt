@@ -11,7 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
-import pojo.users
+import pojo.User
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -93,7 +93,7 @@ class RegisterActivity : AppCompatActivity() {
         db.collection("users").whereEqualTo("mail", mail).get().addOnSuccessListener { querySnapshot ->
             when {
                 querySnapshot.isEmpty -> {
-                    val newUser = users(name, surname, mail, pass, trainer, date,level)
+                    val newUser = User(name, surname, mail, pass, trainer, date,level)
                     db.collection("users").document(name).set(newUser)
                     Toast.makeText(this,"Se ha registrado correctamente",Toast.LENGTH_SHORT).show()
                 }

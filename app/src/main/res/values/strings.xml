@@ -9,6 +9,7 @@
     <string name="todo">TODO</string>
     <string name="enter_password">Enter Password</string>
     <string name="userLogin">Usuario</string>
+    <string name="workoutsInfo">Información de workouts</string>
     <string name="filterHint">Filtrar por nivel</string>
     <string name="filterButton">Filtrar</string>
     <string name="trainerButton">Entrenador</string>

@@ -4,18 +4,25 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
-import android.widget.Switch
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
-import java.text.SimpleDateFormat
-import kotlin.math.log
+import pojo.Exercise
+import pojo.Workout
+
 
 class WorkoutsActivity : AppCompatActivity() {
-    private lateinit var idView : TextView
-    private lateinit var keyid : String
-    private lateinit var showLevel : TextView
+    private lateinit var idView: TextView
+    private lateinit var keyid: String
+    private lateinit var showLevel: TextView
+    private lateinit var filterButton: Button
+    private lateinit var filterText: TextView
+    private lateinit var trainerButton: Button
+    private lateinit var backButton: Button
+
+    private lateinit var workoutsList: List<Workout>
+    private lateinit var exerciseList: List<Exercise>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,26 +31,47 @@ class WorkoutsActivity : AppCompatActivity() {
         keyid = intent.getStringExtra("id") ?: "default_value"
         showLevel = findViewById(R.id.textView2)
 
-
         getUserLevel()
-        val button: Button = findViewById(R.id.button4)
+        loadWorkouts()
+        val button: Button = findViewById(R.id.profileButton)
         button.setOnClickListener {
             val intent = Intent(this@WorkoutsActivity, ProfileActivity::class.java).apply {
-                putExtra("iduser",keyid)
+                putExtra("iduser", keyid)
             }
             startActivity(intent)
             finish()
         }
     }
-    private fun getUserLevel(){
+
+    private fun loadWorkouts() {
+        val db = Firebase.firestore
+        val userId = intent.getStringExtra("id")
+
+        userId?.let { id ->
+            db.collection("users")
+                .document(id)
+                .collection("userHistory_0")
+                .get()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        for (document in task.result) {
+                            workoutsList = task.result.toObjects(Workout::class.java)
+                        }
+                    } else {
+                        print("Error getting documents:")
+                    }
+                }
+        }
+    }
+
+    private fun getUserLevel() {
         val db = Firebase.firestore
         keyid.let { id ->
             db.collection("users").document(id).get()
                 .addOnSuccessListener { document ->
                     if (document != null) {
                         val level = document.getLong("userLevel")
-                        showLevel.setText("Nivel del usuario" + " " +level)
-                        Log.i("this user level","is${level}")
+                        showLevel.text = "Nivel del usuario: $level"
                     }
                 }
                 .addOnFailureListener { exception ->

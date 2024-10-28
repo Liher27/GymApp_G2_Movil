@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_gray">
+    android:background="@color/dark_gray"
+    tools:ignore="VisualLintBounds">
 
     <ImageView
         android:id="@+id/imageView3"
@@ -20,55 +21,53 @@
 
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/profileButton"
         android:layout_width="114dp"
         android:layout_height="48dp"
         android:backgroundTint="@color/black"
         android:text="@string/changeToProfile"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.529"
-        app:layout_constraintStart_toStartOf="@+id/guideline10"
-        app:layout_constraintTop_toTopOf="@+id/guideline3"
-        app:layout_constraintVertical_bias="0.761" />
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/trainerButton"
+        app:layout_constraintTop_toTopOf="@+id/guideline3" />
 
     <Button
-        android:id="@+id/button7"
-        android:layout_width="114dp"
-        android:layout_height="48dp"
+        android:id="@+id/workoutFilteringBtn"
+        android:layout_width="131dp"
+        android:layout_height="62dp"
         android:backgroundTint="@color/black"
         android:text="@string/filterButton"
         app:layout_constraintBottom_toTopOf="@+id/guideline9"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.529"
-        app:layout_constraintStart_toStartOf="@+id/guideline10"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/editNumberText"
         app:layout_constraintTop_toTopOf="@+id/guideline11"
-        app:layout_constraintVertical_bias="0.732" />
+        app:layout_constraintVertical_bias="0.746" />
 
     <Button
-        android:id="@+id/button6"
+        android:id="@+id/workoutBackBtn"
         android:layout_width="114dp"
         android:layout_height="48dp"
         android:backgroundTint="@color/black"
         android:text="@string/buttonBack"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button8"
+        app:layout_constraintEnd_toStartOf="@+id/trainerButton"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline3"
-        app:layout_constraintVertical_bias="0.761" />
+        app:layout_constraintTop_toTopOf="@+id/guideline3" />
 
     <Button
-        android:id="@+id/button8"
+        android:id="@+id/trainerButton"
         android:layout_width="127dp"
         android:layout_height="48dp"
         android:backgroundTint="@color/black"
         android:text="@string/trainerButton"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guideline10"
-        app:layout_constraintStart_toEndOf="@+id/button6"
-        app:layout_constraintTop_toTopOf="@+id/guideline3"
-        app:layout_constraintVertical_bias="0.761" />
+        app:layout_constraintEnd_toStartOf="@+id/profileButton"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/workoutBackBtn"
+        app:layout_constraintTop_toTopOf="@+id/guideline3" />
 
     <TextView
         android:id="@+id/textView3"
@@ -86,6 +85,21 @@
         app:layout_constraintVertical_bias="0.363"
         tools:ignore="TextSizeCheck" />
 
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="313dp"
+        android:layout_height="42dp"
+        android:gravity="center"
+        android:text="@string/workoutsInfo"
+        android:textColor="#FFC107"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline9"
+        app:layout_constraintVertical_bias="0.054"
+        tools:ignore="TextSizeCheck" />
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline3"
         android:layout_width="wrap_content"
@@ -98,7 +112,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="250dp" />
+        app:layout_constraintGuide_begin="219dp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline11"
@@ -107,32 +121,24 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="88dp" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline10"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="263dp" />
-
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="171dp"
-        android:layout_height="28dp"
+        android:layout_width="191dp"
+        android:layout_height="27dp"
         android:gravity="center"
         android:text="@string/userLvl"
         android:textColor="@color/white"
         android:textSize="17sp"
         app:layout_constraintBottom_toTopOf="@+id/editNumberText"
-        app:layout_constraintEnd_toStartOf="@+id/guideline10"
-        app:layout_constraintHorizontal_bias="0.293"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline11"
         tools:ignore="TextSizeCheck" />
 
     <EditText
         android:id="@+id/editNumberText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="241dp"
+        android:layout_height="68dp"
         android:backgroundTint="@color/white"
         android:ems="10"
         android:hint="@string/filterHint"
@@ -142,10 +148,32 @@
         android:minHeight="48dp"
         android:textColorHint="#9E9E9E"
         app:layout_constraintBottom_toTopOf="@+id/guideline9"
-        app:layout_constraintEnd_toStartOf="@+id/guideline10"
+        app:layout_constraintEnd_toStartOf="@+id/workoutFilteringBtn"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2"
         tools:ignore="LabelFor,SpeakableTextPresentCheck" />
+
+    <ListView
+        android:id="@+id/workoutList"
+        android:layout_width="148dp"
+        android:layout_height="351dp"
+        android:layout_marginEnd="1dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline3"
+        app:layout_constraintEnd_toStartOf="@+id/exerciseView"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline9"
+        app:layout_constraintVertical_bias="0.972" />
+
+    <ListView
+        android:id="@+id/exerciseView"
+        android:layout_width="248dp"
+        android:layout_height="351dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/workoutList"
+        app:layout_constraintTop_toTopOf="@+id/guideline9"
+        app:layout_constraintVertical_bias="0.976" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
