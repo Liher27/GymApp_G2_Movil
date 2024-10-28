@@ -3,7 +3,9 @@ package com.example.gymappxml
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.Firebase
@@ -21,7 +23,10 @@ class WorkoutsActivity : AppCompatActivity() {
     private lateinit var trainerButton: Button
     private lateinit var backButton: Button
 
-    private lateinit var workoutsList: List<Workout>
+    private lateinit var workoutsListView: ListView
+    private lateinit var exerciseListView: ListView
+
+    private lateinit var workoutsList: List<String>
     private lateinit var exerciseList: List<Exercise>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,19 +51,30 @@ class WorkoutsActivity : AppCompatActivity() {
     private fun loadWorkouts() {
         val db = Firebase.firestore
         val userId = intent.getStringExtra("id")
-
+        workoutsListView = findViewById(R.id.workoutList)
+        exerciseListView = findViewById(R.id.exerciseView)
+        workoutsList = mutableListOf()
         userId?.let { id ->
-            db.collection("users")
-                .document(id)
-                .collection("userHistory_0")
-                .get()
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        for (document in task.result) {
-                            workoutsList = task.result.toObjects(Workout::class.java)
+            db.collection("users").document(id).collection("userHistory_0").get()
+                .addOnSuccessListener { result ->
+                    for (document in result) {
+
+                        val workoutNameRef =
+                            document.getDocumentReference("workoutName")
+                        val workoutLevelRef =
+                            document.getDocumentReference("workoutLvl")
+                        workoutNameRef?.get()?.addOnSuccessListener { workoutDocument ->
+                            val workoutName =
+                                workoutDocument.getString("workoutName")
+                            (workoutsList as MutableList<String>).add(workoutName ?: "")
+                            val adapter =
+                                ArrayAdapter(
+                                    this,
+                                    android.R.layout.simple_list_item_1,
+                                    workoutsList
+                                )
+                            workoutsListView.adapter = adapter
                         }
-                    } else {
-                        print("Error getting documents:")
                     }
                 }
         }
@@ -67,17 +83,15 @@ class WorkoutsActivity : AppCompatActivity() {
     private fun getUserLevel() {
         val db = Firebase.firestore
         keyid.let { id ->
-            db.collection("users").document(id).get()
-                .addOnSuccessListener { document ->
-                    if (document != null) {
-                        val level = document.getLong("userLevel")
-                        showLevel.text = "Nivel del usuario: $level"
-                    }
+            db.collection("users").document(id).get().addOnSuccessListener { document ->
+                if (document != null) {
+                    val level = document.getLong("userLevel")
+                    showLevel.text = "Nivel del usuario: $level"
                 }
-                .addOnFailureListener { exception ->
-                    Log.e("showUserData", "Error getting user data: ", exception)
+            }.addOnFailureListener { exception ->
+                Log.e("showUserData", "Error getting user data: ", exception)
 
-                }
+            }
         }
     }
 }
