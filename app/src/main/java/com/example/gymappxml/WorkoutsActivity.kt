@@ -46,13 +46,17 @@ class WorkoutsActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+        workoutsListView.setOnItemClickListener { parent, view, position, id ->
+            val workoutName = workoutsListView.getItemAtPosition(position) as String
+            loadExercises(workoutName)
+        }
+
     }
 
     private fun loadWorkouts() {
         val db = Firebase.firestore
         val userId = intent.getStringExtra("id")
         workoutsListView = findViewById(R.id.workoutList)
-        exerciseListView = findViewById(R.id.exerciseView)
         workoutsList = mutableListOf()
         userId?.let { id ->
             db.collection("users").document(id).collection("userHistory_0").get()
@@ -78,6 +82,37 @@ class WorkoutsActivity : AppCompatActivity() {
                     }
                 }
         }
+    }
+
+    private fun loadExercises(workoutName: String) {
+        val db = Firebase.firestore
+        exerciseListView = findViewById(R.id.workoutList)
+        exerciseList = mutableListOf()
+
+        db.collection("workouts").document(workoutName).collection("workoutExercises").get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+
+                    val exerciseName =
+                        document.getString("exerciseName")
+                    val image =
+                        document.getString("image")
+                    val restTime =
+                        document.getLong("restTime")?.toInt()
+                    val seriesNumber =
+                        document.getLong("seriesNumber")?.toInt()
+
+                        (exerciseList as MutableList<Exercise>).add(Exercise(workoutName,
+                            image, restTime, seriesNumber))
+                        val adapter =
+                            ArrayAdapter(
+                                this,
+                                android.R.layout.simple_list_item_1,
+                                exerciseList
+                            )
+                       exerciseListView.adapter = adapter
+                }
+            }
     }
 
     private fun getUserLevel() {
