@@ -2,6 +2,7 @@ package com.example.gymappxml
 
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.SharedPreferences.Editor
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.Log
@@ -12,6 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlin.properties.Delegates
 
 
 class LoginActivity : AppCompatActivity() {
@@ -21,19 +23,33 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var db: FirebaseFirestore
     private lateinit var useid: String
     private lateinit var rememberMe : CheckBox
+    private lateinit var perf: SharedPreferences
+    private var saveUser by Delegates.notNull<Boolean>()
+    private lateinit var editor : Editor
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        perf = getSharedPreferences("document_sharedPreferences", MODE_PRIVATE)
+        saveUser = perf.getBoolean("saveLogin",false)
+        editor = perf.edit()
+        emailEditText = findViewById(R.id.editTextLogin)
+        passEditText = findViewById(R.id.editTextPassword)
+
 
         db = FirebaseFirestore.getInstance()
         rememberMe = findViewById(R.id.checkBox)
+
+        if (saveUser){
+            emailEditText.setText(perf.getString("userEmail", ""))
+            passEditText.setText(perf.getString("userPass", ""))
+            rememberMe.isChecked
+        }
 
 
 
         val button: Button = findViewById(R.id.button)
         button.setOnClickListener {
-            emailEditText = findViewById(R.id.editTextLogin)
-            passEditText = findViewById(R.id.editTextPassword)
+
 
 
             val email = emailEditText.text.toString()
@@ -62,10 +78,10 @@ class LoginActivity : AppCompatActivity() {
             .get()
             .addOnSuccessListener { result ->
                 var isAuthenticated = false
+
                 for (document in result) {
                     val userEmail = document.getString("mail")
                     val userPassword = document.getString("pass")
-
                     if (userEmail.equals(mail, true) && userPassword.equals(pass, false)) {
                         isAuthenticated = true
                         useid = document.id
@@ -74,7 +90,16 @@ class LoginActivity : AppCompatActivity() {
                                 putExtra("id", useid)
                             }
                         startActivity(intentProfileActivity)
-                        Log.i("this user id ", "is $useid")
+                        if(rememberMe.isChecked){
+                            editor.putBoolean("saveLogin", true);
+                            editor.putString("mail",mail)
+                            editor.putString("password",pass)
+                            editor.apply()
+                        }else{
+                            editor.clear()
+                            editor.apply()
+                        }
+
                         break
                     }
                 }

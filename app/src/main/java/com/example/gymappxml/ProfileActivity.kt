@@ -10,10 +10,13 @@ import android.widget.EditText
 import android.widget.Switch
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.ui.text.intl.Locale
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import java.text.SimpleDateFormat
 import java.util.Date
+import kotlin.math.log
+import kotlin.text.format
 
 class ProfileActivity : AppCompatActivity() {
     private lateinit var userFiled : EditText
@@ -79,19 +82,27 @@ class ProfileActivity : AppCompatActivity() {
                         val userName = document.getString("name")
                         val userSurname = document.getString("surname")
                         val userEmail = document.getString("mail")
-                        val userBirtyDate = document.getTimestamp("birtyDate")
+                        val userBirtyDate = document.getTimestamp("birthDate")
                         val isTrainer = document.getBoolean("trainer")
+
 
                         if (isTrainer == true){
                             userType.setText("Entrenador")
                         }else{
                             userType.setText("Cliente")
                         }
+                        userBirtyDate?.let {
+                            val date = it.toDate()
+                            val dateFormat = SimpleDateFormat("dd-MM-yyyy", java.util.Locale.getDefault())
+                            val formattedDate = dateFormat.format(date)
+                            userBirtyDateFiled.setText(formattedDate)
+                        }
 
                         userFiled.setText(userId)
                         userNameFiled.setText(userName)
                         userSurnameFiled.setText(userSurname)
                         userEmailFiled.setText(userEmail)
+
 
 
 
