@@ -1,9 +1,12 @@
 package com.example.gymappxml
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.util.Log
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -17,16 +20,21 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var passEditText: EditText
     private lateinit var db: FirebaseFirestore
     private lateinit var useid: String
+    private lateinit var rememberMe : CheckBox
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
         db = FirebaseFirestore.getInstance()
+        rememberMe = findViewById(R.id.checkBox)
+
+
 
         val button: Button = findViewById(R.id.button)
         button.setOnClickListener {
             emailEditText = findViewById(R.id.editTextLogin)
             passEditText = findViewById(R.id.editTextPassword)
+
 
             val email = emailEditText.text.toString()
             val password = passEditText.text.toString()

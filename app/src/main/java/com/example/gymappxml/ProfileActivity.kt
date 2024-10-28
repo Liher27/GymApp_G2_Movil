@@ -1,15 +1,19 @@
 package com.example.gymappxml
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Switch
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import java.text.SimpleDateFormat
-import com.example.gymappxml.WorkoutsActivity
+import java.util.Date
 
 class ProfileActivity : AppCompatActivity() {
     private lateinit var userFiled : EditText
@@ -18,18 +22,25 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var userEmailFiled : EditText
     private lateinit var userBirtyDateFiled : EditText
     private lateinit var userType : EditText
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
+    private lateinit var switchMode : Switch
+    private lateinit var sharedPreferences: SharedPreferences
+
+    private var isDarkTheme = true
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
-
+        switchMode = findViewById(R.id.switch1)
         userFiled = findViewById(R.id.userIdFiled)
         userNameFiled = findViewById(R.id.NameFiled)
         userSurnameFiled = findViewById(R.id.SurNameFiled)
         userEmailFiled = findViewById(R.id.emailFiled)
         userBirtyDateFiled = findViewById(R.id.dateFiled)
         userType = findViewById(R.id.editText4)
+
+        sharedPreferences = getSharedPreferences("document_sharedPreferences", MODE_PRIVATE)
 
         val backButton : Button = findViewById(R.id.button5)
         val button : Button = findViewById(R.id.button3)
@@ -39,16 +50,23 @@ class ProfileActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+        showUserData()
+        switchMode.setOnCheckedChangeListener{
+            _, isChecked ->
+            val theme = sharedPreferences.getInt("theme",AppCompatDelegate.MODE_NIGHT_YES)
+            if (isChecked){
+                if (theme == AppCompatDelegate.MODE_NIGHT_YES)
 
-        button.setOnClickListener {
-            showUserData()
+                    AppCompatDelegate.MODE_NIGHT_NO
+            }else{
+                AppCompatDelegate.MODE_NIGHT_YES
+            }
+            sharedPreferences.edit().putInt("theme",theme).apply()
+            AppCompatDelegate.setDefaultNightMode(theme)
+
         }
 
-
     }
-
-
-
 
     private fun showUserData() {
         val db = Firebase.firestore
@@ -61,7 +79,7 @@ class ProfileActivity : AppCompatActivity() {
                         val userName = document.getString("name")
                         val userSurname = document.getString("surname")
                         val userEmail = document.getString("mail")
-                        val userBirtyDate = document.getDate("birtyDate")
+                        val userBirtyDate = document.getTimestamp("birtyDate")
                         val isTrainer = document.getBoolean("trainer")
 
                         if (isTrainer == true){
@@ -75,10 +93,7 @@ class ProfileActivity : AppCompatActivity() {
                         userSurnameFiled.setText(userSurname)
                         userEmailFiled.setText(userEmail)
 
-                        val dateFormat = SimpleDateFormat("dd/MM/yyyy",
-                            java.util.Locale.getDefault())
-                        val formattedBirthDate = userBirtyDate?.let { dateFormat.format(it) } ?: ""
-                        userBirtyDateFiled.setText(formattedBirthDate)
+
 
 
                     }
@@ -87,6 +102,15 @@ class ProfileActivity : AppCompatActivity() {
                     Log.e("showUserData", "Error getting user data: ", exception)
 
                 }
+        }
+    }
+    private fun getDateTime(s: String): String? {
+        try {
+            val sdf = SimpleDateFormat("MM/dd/yyyy")
+            val netDate = Date(s.toLong() * 1000)
+            return sdf.format(netDate)
+        } catch (e: Exception) {
+            return e.toString()
         }
     }
 }
