@@ -10,13 +10,9 @@ import android.widget.EditText
 import android.widget.Switch
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.compose.ui.text.intl.Locale
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import java.text.SimpleDateFormat
-import java.util.Date
-import kotlin.math.log
-import kotlin.text.format
 
 class ProfileActivity : AppCompatActivity() {
     private lateinit var userFiled : EditText
@@ -115,13 +111,5 @@ class ProfileActivity : AppCompatActivity() {
                 }
         }
     }
-    private fun getDateTime(s: String): String? {
-        try {
-            val sdf = SimpleDateFormat("MM/dd/yyyy")
-            val netDate = Date(s.toLong() * 1000)
-            return sdf.format(netDate)
-        } catch (e: Exception) {
-            return e.toString()
-        }
-    }
+
 }

@@ -7,21 +7,17 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ListView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import pojo.Exercise
-import pojo.Workout
 
 
 class WorkoutsActivity : AppCompatActivity() {
-    private lateinit var idView: TextView
     private lateinit var keyid: String
     private lateinit var showLevel: TextView
-    private lateinit var filterButton: Button
     private lateinit var filterText: TextView
-    private lateinit var trainerButton: Button
-    private lateinit var backButton: Button
 
     private lateinit var workoutsListView: ListView
     private lateinit var exerciseListView: ListView
@@ -38,18 +34,46 @@ class WorkoutsActivity : AppCompatActivity() {
 
         getUserLevel()
         loadWorkouts()
-        val button: Button = findViewById(R.id.profileButton)
-        button.setOnClickListener {
+
+        findViewById<Button>(R.id.trainerButton).setOnClickListener {
+            val intent = Intent(this@WorkoutsActivity, TrainerActivity::class.java).apply {
+                putExtra("id", keyid)
+            }
+            startActivity(intent)
+            finish()
+        }
+
+        findViewById<Button>(R.id.workoutBackBtn).setOnClickListener {
+            val intent = Intent(this@WorkoutsActivity, LoginActivity::class.java).apply {
+            }
+            startActivity(intent)
+            finish()
+        }
+        findViewById<Button>(R.id.workoutFilteringBtn).setOnClickListener {
+        if (filterText.text.toString().isEmpty()) {
+            Toast.makeText(this, "No has seleccionado ningún nivel", Toast.LENGTH_SHORT).show()
+        }else{
+            val level = filterText.text.toString().toInt()
+            filterWorkouts(level)
+        }
+
+        }
+
+        findViewById<Button>(R.id.profileButton).setOnClickListener {
             val intent = Intent(this@WorkoutsActivity, ProfileActivity::class.java).apply {
                 putExtra("iduser", keyid)
             }
             startActivity(intent)
             finish()
         }
-        workoutsListView.setOnItemClickListener { parent, view, position, id ->
-            val workoutName = workoutsListView.getItemAtPosition(position) as String
+
+        workoutsListView.setOnItemClickListener { _, _, position, _ ->
+            val workoutName = workoutsListView.getItemAtPosition(position).toString()
             loadExercises(workoutName)
         }
+    }
+
+    private fun filterWorkouts(level: Int) {
 
     }
 
@@ -102,15 +126,19 @@ class WorkoutsActivity : AppCompatActivity() {
                     val seriesNumber =
                         document.getLong("seriesNumber")?.toInt()
 
-                        (exerciseList as MutableList<Exercise>).add(Exercise(workoutName,
-                            image, restTime, seriesNumber))
-                        val adapter =
-                            ArrayAdapter(
-                                this,
-                                android.R.layout.simple_list_item_1,
-                                exerciseList
-                            )
-                       exerciseListView.adapter = adapter
+                    (exerciseList as MutableList<Exercise>).add(
+                        Exercise(
+                            exerciseName,
+                            image, restTime, seriesNumber
+                        )
+                    )
+                    val adapter =
+                        ArrayAdapter(
+                            this,
+                            android.R.layout.simple_list_item_1,
+                            exerciseList
+                        )
+                    exerciseListView.adapter = adapter
                 }
             }
     }

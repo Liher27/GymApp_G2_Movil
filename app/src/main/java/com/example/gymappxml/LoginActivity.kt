@@ -37,13 +37,13 @@ class LoginActivity : AppCompatActivity() {
 
 
         db = FirebaseFirestore.getInstance()
-        rememberMe = findViewById(R.id.checkBox)
 
-        if (saveUser){
+
+       /* if (saveUser){
             emailEditText.setText(perf.getString("userEmail", ""))
             passEditText.setText(perf.getString("userPass", ""))
             rememberMe.isChecked
-        }
+        }*/
 
 
 
@@ -90,7 +90,7 @@ class LoginActivity : AppCompatActivity() {
                                 putExtra("id", useid)
                             }
                         startActivity(intentProfileActivity)
-                        if(rememberMe.isChecked){
+                      /*  if(rememberMe.isChecked){
                             editor.putBoolean("saveLogin", true);
                             editor.putString("mail",mail)
                             editor.putString("password",pass)
@@ -98,7 +98,7 @@ class LoginActivity : AppCompatActivity() {
                         }else{
                             editor.clear()
                             editor.apply()
-                        }
+                        }*/
 
                         break
                     }
