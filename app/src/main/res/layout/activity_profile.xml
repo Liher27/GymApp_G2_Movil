@@ -95,31 +95,19 @@
             app:layout_constraintTop_toTopOf="@+id/guideline15"
             tools:ignore="VisualLintTextFieldSize" />
 
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="408dp"
-            android:layout_height="51dp"
-            android:layout_marginBottom="44dp"
-            android:backgroundTint="@color/black"
-            android:text="@string/loadInfo"
-            app:layout_constraintBottom_toTopOf="@+id/button5"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/guideline17"
-            tools:ignore="VisualLintButtonSize" />
 
         <Button
-            android:id="@+id/button5"
+            android:id="@+id/profileBackButton"
             android:layout_width="161dp"
             android:layout_height="48dp"
             android:backgroundTint="@color/black"
             android:text="@string/buttonBack"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="0.425"
             app:layout_constraintStart_toStartOf="@+id/guideline8"
-            app:layout_constraintTop_toBottomOf="@+id/button3"
-            app:layout_constraintVertical_bias="0.84"
+            app:layout_constraintTop_toTopOf="@+id/guideline17"
+            app:layout_constraintVertical_bias="0.745"
             tools:ignore="VisualLintButtonSize" />
 
         <Switch
@@ -191,29 +179,18 @@
             android:orientation="vertical"
             app:layout_constraintGuide_begin="240dp" />
 
-        <com.google.android.material.chip.ChipGroup
-            android:layout_width="173dp"
-            android:layout_height="45dp"
-            app:layout_constraintBottom_toTopOf="@+id/guideline7"
-            app:layout_constraintEnd_toStartOf="@+id/guideline8"
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="112dp"
+            android:text="Button"
+            app:layout_constraintBottom_toTopOf="@+id/profileBackButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.474"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="TextSizeCheck">
+            app:layout_constraintTop_toTopOf="@+id/guideline17" />
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/changeSpanish"
-                tools:ignore="TouchTargetSizeCheck" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chip2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/changeEnglish"
-                tools:ignore="VisualLintBounds,TouchTargetSizeCheck" />
-        </com.google.android.material.chip.ChipGroup>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

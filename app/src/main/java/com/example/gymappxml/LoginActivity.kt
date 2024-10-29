@@ -37,6 +37,7 @@ class LoginActivity : AppCompatActivity() {
 
 
         db = FirebaseFirestore.getInstance()
+        //rememberMe = findViewById(R.id.checkBox)
 
 
        /* if (saveUser){

@@ -104,7 +104,7 @@
         app:layout_constraintVertical_bias="0.158"
         tools:ignore="LabelFor,SpeakableTextPresentCheck" />
 
-    <CheckBox
+     <!--<CheckBox
         android:id="@+id/checkBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -116,20 +116,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline4"
         tools:ignore="HardcodedText,VisualLintBounds" />
+        -->
 
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Iniciar Sesion"
         android:backgroundTint="@color/black"
+        android:text="Iniciar Sesion"
         android:textColor="#FFD600"
-        app:layout_constraintBottom_toTopOf="@+id/textViewRegister"
+        app:layout_constraintBottom_toTopOf="@+id/guideline5"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checkBox"
-        app:layout_constraintVertical_bias="0.333"
+        app:layout_constraintTop_toTopOf="@+id/guideline4"
         tools:ignore="HardcodedText,VisualLintBounds" />
 
     <androidx.constraintlayout.widget.Guideline

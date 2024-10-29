@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ErrekaFit</string>
+    <string name="LoginToStart">Login in to continue</string>
+    <string name="editTextLogin">Login</string>
+    <string name="errekafit">ERREKAFIT</string>
+    <string name="workouts">WORKOUTS</string>
+    <string name="login">Login</string>
+    <string name="noAccountTextView">You dont have account? Regitser here!</string>
+    <string name="todo">TODO</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="userLogin">User</string>
+    <string name="workoutsInfo">Workouts information</string>
+    <string name="filterHint">Filter from level</string>
+    <string name="filterButton">Filter</string>
+    <string name="trainerButton">Trainer</string>
+    <string name="userLvl">User level: </string>
+    <string name="passLogin">Password</string>
+    <string name="enter_user">Log_User</string>
+    <string name="loginTextView">Login in</string>
+    <string name="editTextname">Name</string>
+    <string name="editTextDate">Birty date</string>
+    <string name="editTextTextEmailAddress">Mail</string>
+    <string name="editTextSurname">Surname</string>
+    <string name="editTextTextPassword">Passowrd</string>
+    <string name="spinner">User Type</string>
+    <string name="register">Register</string>
+    <string name="NameInputText">Name\n</string>
+    <string name="Surname">Surname</string>
+    <string name="Mail">Mail</string>
+    <string name="birthDate">Birth date</string>
+    <string name="User">UserName</string>
+    <string name="SwitchThemeChager">Light Mode</string>
+    <string name="buttonBack">Back</string>
+    <string name="changeSpanish">Spanish</string>
+    <string name="changeEnglish">English</string>
+    <string name="userName">userName\n</string>
+    <string name="changeToProfile">Profile</string>
+    <string name="estrainer">Are you Trainer?</string>
+    <string-array name="userType">
+        <item>Client</item>
+        <item>Trainer</item>
+    </string-array>
+</resources>

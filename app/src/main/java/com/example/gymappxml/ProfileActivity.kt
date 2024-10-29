@@ -1,6 +1,7 @@
 package com.example.gymappxml
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -10,9 +11,11 @@ import android.widget.EditText
 import android.widget.Switch
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import com.google.android.gms.common.internal.service.Common
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import java.text.SimpleDateFormat
+import java.util.Date
 
 class ProfileActivity : AppCompatActivity() {
     private lateinit var userFiled : EditText
@@ -24,7 +27,6 @@ class ProfileActivity : AppCompatActivity() {
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     private lateinit var switchMode : Switch
     private lateinit var sharedPreferences: SharedPreferences
-
     private var isDarkTheme = true
 
 
@@ -41,15 +43,14 @@ class ProfileActivity : AppCompatActivity() {
 
         sharedPreferences = getSharedPreferences("document_sharedPreferences", MODE_PRIVATE)
 
-        val backButton : Button = findViewById(R.id.button5)
-        val button : Button = findViewById(R.id.button3)
+        val backButton : Button = findViewById(R.id.profileBackButton)
 
         backButton.setOnClickListener{
             val intent = Intent(this@ProfileActivity, WorkoutsActivity::class.java)
             startActivity(intent)
             finish()
         }
-        showUserData()
+
         switchMode.setOnCheckedChangeListener{
             _, isChecked ->
             val theme = sharedPreferences.getInt("theme",AppCompatDelegate.MODE_NIGHT_YES)
@@ -64,7 +65,8 @@ class ProfileActivity : AppCompatActivity() {
             AppCompatDelegate.setDefaultNightMode(theme)
 
         }
-
+        showUserData()
+        disableTextFiled()
     }
 
     private fun showUserData() {
@@ -98,11 +100,6 @@ class ProfileActivity : AppCompatActivity() {
                         userNameFiled.setText(userName)
                         userSurnameFiled.setText(userSurname)
                         userEmailFiled.setText(userEmail)
-
-
-
-
-
                     }
                 }
                 .addOnFailureListener { exception ->
@@ -111,5 +108,18 @@ class ProfileActivity : AppCompatActivity() {
                 }
         }
     }
+    private fun disableTextFiled(){
+        userFiled.isEnabled = false
+        userNameFiled.isEnabled = false
+        userSurnameFiled.isEnabled = false
+        userEmailFiled.isEnabled = false
+        userBirtyDateFiled.isEnabled = false
+        userType.isEnabled = false
+    }
+    private fun checkLanguage(context: Context): Context{
 
+        val config = context.resources.configuration
+
+        return context
+    }
 }
