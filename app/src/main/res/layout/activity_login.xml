@@ -104,7 +104,7 @@
         app:layout_constraintVertical_bias="0.158"
         tools:ignore="LabelFor,SpeakableTextPresentCheck" />
 
-     <CheckBox
+     <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/checkBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

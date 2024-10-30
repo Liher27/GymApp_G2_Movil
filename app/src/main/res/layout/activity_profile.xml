@@ -81,7 +81,7 @@
             app:layout_constraintTop_toTopOf="@+id/guideline14"
             tools:ignore="DuplicateSpeakableTextCheck,VisualLintTextFieldSize" />
 
-        <com.google.android.material.textfield.TextInputEditText
+        <EditText
             android:id="@+id/dateFiled"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
