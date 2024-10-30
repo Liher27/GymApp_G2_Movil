@@ -31,7 +31,7 @@
     <string name="User">UserName</string>
     <string name="SwitchThemeChager">Light Mode</string>
     <string name="buttonBack">Volver</string>
-    <string name="loadInfo">Cargar informacion</string>
+    <string name="loadInfo" translatable="false">Cargar informacion</string>
     <string name="changeSpanish">Español</string>
     <string name="changeEnglish">English</string>
     <string name="userName">userName\n</string>
