@@ -14,8 +14,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlin.properties.Delegates
-
-
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var emailEditText: EditText

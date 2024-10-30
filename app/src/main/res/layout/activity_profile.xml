@@ -179,17 +179,24 @@
             android:orientation="vertical"
             app:layout_constraintGuide_begin="240dp" />
 
-        <Button
-            android:id="@+id/button3"
+
+        <Spinner
+            android:id="@+id/spinnerLan"
+            android:layout_width="155dp"
+            android:layout_height="52dp"
+            app:layout_constraintBottom_toTopOf="@+id/guideline7"
+            app:layout_constraintEnd_toStartOf="@+id/switch1"
+            app:layout_constraintHorizontal_bias="0.122"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.421" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="112dp"
-            android:text="Button"
-            app:layout_constraintBottom_toTopOf="@+id/profileBackButton"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.474"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/guideline17" />
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="708dp" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

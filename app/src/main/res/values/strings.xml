@@ -41,4 +41,8 @@
        <item>Client</item>
        <item>Trainer</item>
     </string-array>
+    <string-array name="Language">
+        <item>Español</item>
+        <item>English</item>
+    </string-array>
 </resources>

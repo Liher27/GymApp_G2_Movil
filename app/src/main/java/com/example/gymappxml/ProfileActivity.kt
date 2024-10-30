@@ -6,14 +6,17 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Spinner
 import android.widget.Switch
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.android.gms.common.internal.service.Common
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
+import org.intellij.lang.annotations.Language
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -27,6 +30,7 @@ class ProfileActivity : AppCompatActivity() {
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     private lateinit var switchMode : Switch
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var spinnerLanguage: Spinner
     private var isDarkTheme = true
 
 
@@ -40,6 +44,7 @@ class ProfileActivity : AppCompatActivity() {
         userEmailFiled = findViewById(R.id.emailFiled)
         userBirtyDateFiled = findViewById(R.id.dateFiled)
         userType = findViewById(R.id.editText4)
+        spinnerLanguage= findViewById(R.id.spinnerLan)
 
         sharedPreferences = getSharedPreferences("document_sharedPreferences", MODE_PRIVATE)
 
@@ -49,6 +54,14 @@ class ProfileActivity : AppCompatActivity() {
             val intent = Intent(this@ProfileActivity, WorkoutsActivity::class.java)
             startActivity(intent)
             finish()
+        }
+
+        ArrayAdapter.createFromResource(
+            this,R.array.Language,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinnerLanguage.adapter = adapter
         }
 
         switchMode.setOnCheckedChangeListener{
