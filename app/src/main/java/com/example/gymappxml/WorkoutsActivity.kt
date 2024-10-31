@@ -1,12 +1,14 @@
 package com.example.gymappxml
 
-import android.content.ContentValues.TAG
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
@@ -26,13 +28,16 @@ class WorkoutsActivity : AppCompatActivity() {
     private lateinit var exerciseListView: ListView
 
     private lateinit var trainerButton: Button
+    private lateinit var exerciseImage: ImageView
 
     private lateinit var workoutsList: List<Workout>
+    private lateinit var workoutsNames: List<String>
     private lateinit var workoutsAdapter: ArrayAdapter<String>
-    private lateinit var exerciseList: List<Exercise>
+    private lateinit var exerciseList: List<String>
 
-    private var workoutLevel: Int = 0
     private lateinit var workoutName: String
+    private var workoutLevel: Int = 0
+    private lateinit var id: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +63,10 @@ class WorkoutsActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.workoutBackBtn).setOnClickListener {
-            loadExercises("workout_0")
+            val intent = Intent(this@WorkoutsActivity, LoginActivity::class.java).apply {
+            }
+            startActivity(intent)
+            finish()
         }
         findViewById<Button>(R.id.workoutFilteringBtn).setOnClickListener {
             if (filterText.text.toString().isEmpty()) {
@@ -79,8 +87,7 @@ class WorkoutsActivity : AppCompatActivity() {
         }
 
         workoutsListView.setOnItemClickListener { _, _, position, _ ->
-            val selectedWorkout = workoutsList[position]
-            loadExercises(selectedWorkout.toString())
+            loadExercises(position)
         }
     }
 
@@ -89,10 +96,10 @@ class WorkoutsActivity : AppCompatActivity() {
     }
 
     private fun loadWorkouts() {
+        workoutName = ""
+        workoutsNames = mutableListOf()
         val db = Firebase.firestore
         val userId = intent.getStringExtra("id")
-        val workoutsNames = mutableListOf<String>()
-
         workoutsListView = findViewById(R.id.workoutList)
         workoutsList = mutableListOf()
 
@@ -100,46 +107,51 @@ class WorkoutsActivity : AppCompatActivity() {
             db.collection("users").document(id).collection("userHistory_0").get()
                 .addOnSuccessListener { result ->
                     for (document in result) {
-                        val workoutId = document.id
 
                         val workoutNameRef =
                             document.getDocumentReference("workoutName")
 
                         val workoutLevelRef =
-                            document.getDocumentReference("workoutLvl")
+                            document.getDocumentReference("workoutLevel")
+
+                        workoutLevelRef?.get()?.addOnSuccessListener { workoutDocument ->
+                            workoutLevel = workoutDocument.getLong("level")?.toInt()!!
+                        }
 
                         workoutNameRef?.get()?.addOnSuccessListener { workoutDocument ->
-                            workoutName =
-                                workoutDocument.getString("workoutName")!!
+                            workoutName = workoutDocument.getString("workoutName")!!
+
+                            val workoutId =
+                                document.getDocumentReference(workoutName)?.id
+
+                            val workout = Workout(workoutName, workoutLevel, workoutId)
+
+                            (workoutsList as MutableList<Workout>).add(workout)
+                            (workoutsNames as MutableList<String>).add(workout.workoutName!!)
+
+                            workoutsAdapter = ArrayAdapter(
+                                this,
+                                android.R.layout.simple_list_item_1,
+                                workoutsNames
+                            )
+                            workoutsListView.adapter = workoutsAdapter
+
                         }
-
-                        workoutLevelRef?.get()?.addOnSuccessListener { levelDocument ->
-                            workoutLevel =
-                                levelDocument.getLong("workoutLvl")!!.toInt()
-                        }
-
-                        val workout = Workout(workoutName, workoutLevel, workoutId)
-                        workoutsNames.add(workoutName ?: "")
-                        (workoutsList as MutableList<Workout>).add(workout)
-
-                        //workoutsAdapter = ArrayAdapter(
-                        //   this,
-                        //   android.R.layout.simple_list_item_1,
-                        //  workoutsList.get(0).toString()
-                        //)
-                        workoutsListView.adapter = workoutsAdapter
 
                     }
                 }
         }
     }
 
-    private fun loadExercises(workoutName: String) {
+    private fun loadExercises(index: Int) {
         val db = Firebase.firestore
         exerciseListView = findViewById(R.id.exerciseView)
         exerciseList = mutableListOf()
 
-        db.collection("workouts").document("workout_0").collection("workoutExercises").get()
+        id = getWorkoutId(workoutsList[index].workoutName)
+        Log.e("WorkoutID", id)
+        db.collection("workouts").document("workout_0")
+            .collection("workoutExercises").get()
             .addOnSuccessListener { result ->
                 for (document in result) {
                     val exerciseName =
@@ -150,12 +162,9 @@ class WorkoutsActivity : AppCompatActivity() {
                         document.getLong("restTime")?.toInt()
                     val seriesNumber =
                         document.getLong("seriesNumber")?.toInt()
-
-                    (exerciseList as MutableList<Exercise>).add(
-                        Exercise(
-                            exerciseName,
-                            image, restTime, seriesNumber
-                        )
+                    loadExerciseImage(image)
+                    (exerciseList as MutableList<String>).add(
+                        "Nombre: $exerciseName            Tiempo de descanso: $restTime             Número de series: $seriesNumber "
                     )
                     val adapter =
                         ArrayAdapter(
@@ -167,6 +176,25 @@ class WorkoutsActivity : AppCompatActivity() {
                 }
             }
 
+    }
+
+    private fun getWorkoutId(workoutName: String?): String {
+        val db = Firebase.firestore
+        var id = ""
+        db.collection("workouts").whereEqualTo("workoutName", workoutName).get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    id = document.id
+                }
+            }
+        return id
+    }
+
+    private fun loadExerciseImage(image: String?) {
+        exerciseImage = findViewById(R.id.exerciseImage)
+        val decodedString: ByteArray = Base64.decode(image, Base64.DEFAULT)
+        val decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
+        exerciseImage.setImageBitmap(decodedByte)
     }
 
     private fun getUserLevel() {
