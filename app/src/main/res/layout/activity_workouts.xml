@@ -143,8 +143,8 @@
         android:id="@+id/workoutList"
         android:layout_width="148dp"
         android:layout_height="262dp"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/exerciseImage"
+        android:layout_marginBottom="43dp"
+        app:layout_constraintBottom_toTopOf="@+id/button3"
         app:layout_constraintEnd_toStartOf="@+id/exerciseView"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -160,16 +160,15 @@
         app:layout_constraintTop_toTopOf="@+id/guideline9"
         app:layout_constraintVertical_bias="0.305" />
 
-    <ImageView
-        android:id="@+id/exerciseImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="158dp"
+        android:layout_height="77dp"
+        android:text="@string/videoButtonTxt"
         app:layout_constraintBottom_toTopOf="@+id/guideline3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.081"
+        app:layout_constraintEnd_toStartOf="@+id/exerciseView"
+        app:layout_constraintHorizontal_bias="0.625"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/workoutList"
-        app:layout_constraintVertical_bias="1.0"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:layout_constraintTop_toBottomOf="@+id/workoutList" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

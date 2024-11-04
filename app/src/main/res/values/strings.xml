@@ -17,6 +17,8 @@
     <string name="passLogin">Contraseña</string>
     <string name="enter_user">enter_user</string>
     <string name="loginTextView">Inicio de sesión</string>
+    <string name="txt_ok">OK!</string>
+    <string name="videoButtonTxt">Reproducir video</string>
     <string name="editTextname">Nombre</string>
     <string name="editTextDate">Fecha de Nacimiento</string>
     <string name="editTextTextEmailAddress">Correo</string>
@@ -37,6 +39,9 @@
     <string name="userName">userName\n</string>
     <string name="changeToProfile">Perfil</string>
     <string name="estrainer">Es entrenador?</string>
+    <string name="txt_error_2">No se ha cargado el video</string>
+    <string name="txt_error_1">Ha habido un error en la aplicacion</string>
+    <string name="txt_intent_web">Elige una de las siguientes apps:</string>
     <string-array name="userType">
        <item>Client</item>
        <item>Trainer</item>
