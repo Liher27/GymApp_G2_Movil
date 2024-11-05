@@ -1,5 +1,6 @@
 package com.example.gymappxml
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -43,7 +44,6 @@ class WorkoutsActivity : AppCompatActivity() {
     private var exerciseTime: Int = 0
     private var exerciseTotalTime: Int = 0
 
-    private lateinit var workoutUrl: String
     private lateinit var workoutName: String
     private var workoutLevel: Int = 0
     private lateinit var id: String
@@ -59,13 +59,15 @@ class WorkoutsActivity : AppCompatActivity() {
         getUserLevel()
         lifecycleScope.launch {
             loadWorkouts()
+
+            if (userIsTrainer()) {
+                trainerButton.visibility = View.VISIBLE
+            } else {
+                trainerButton.visibility = View.GONE
+            }
         }
 
-        if (userIsTrainer()) {
-            trainerButton.visibility = View.VISIBLE
-        } else {
-            trainerButton.visibility = View.GONE
-        }
+
 
         findViewById<Button>(R.id.trainerButton).setOnClickListener {
             val intent = Intent(this@WorkoutsActivity, TrainerActivity::class.java).apply {
@@ -85,8 +87,8 @@ class WorkoutsActivity : AppCompatActivity() {
             if (filterText.text.toString().isEmpty()) {
                 Toast.makeText(this, "No has seleccionado ningún nivel", Toast.LENGTH_SHORT).show()
             } else {
-                val level = filterText.text.toString().toInt()
-                filterWorkouts(level)
+               // val level = filterText.text.toString().toInt()
+                //    filterWorkouts(level)
             }
 
         }
@@ -108,9 +110,10 @@ class WorkoutsActivity : AppCompatActivity() {
         }
     }
 
-    private fun filterWorkouts(level: Int) {
 
-    }
+    //  private fun filterWorkouts(level: Int) {
+
+    //   }
 
     private suspend fun loadWorkouts() {
         workoutName = ""
@@ -133,7 +136,7 @@ class WorkoutsActivity : AppCompatActivity() {
 
                     exerciseTime = document.getLong("providedTime")?.toInt()!!
                     exerciseTotalTime = document.getLong("totalTime")?.toInt()!!
-                    exerciseProgress = document.getString("progress")!!
+                    exerciseProgress = document.getString("exercisePercent")!!
                     exerciseDateFinish = document.getTimestamp("finishDate")!!
 
                     workoutLevelRef?.get()?.await()?.let { workoutDocument ->
@@ -182,7 +185,6 @@ class WorkoutsActivity : AppCompatActivity() {
         exerciseList = mutableListOf()
 
         id = workoutsList[index].workoutId.toString()
-        Log.e("id", id)
 
         db.collection("workouts").document(id)
             .collection("workoutExercises").get()
@@ -216,7 +218,6 @@ class WorkoutsActivity : AppCompatActivity() {
                     exerciseListView.adapter = adapter
                 }
             }
-
     }
 
     private fun getUserLevel() {
@@ -235,20 +236,14 @@ class WorkoutsActivity : AppCompatActivity() {
         }
     }
 
-    private fun userIsTrainer(): Boolean {
-        var ret = false
-        val db = Firebase.firestore
-        keyid.let { id ->
-            db.collection("users").document(id).get().addOnSuccessListener { document ->
-                if (document != null) {
-                    val isTrainer = document.getBoolean("trainer")
-                    ret = isTrainer ?: false
-                }
-            }
+    private suspend fun userIsTrainer(): Boolean {
+        return withContext(Dispatchers.IO) {
+            val querySnapshot = Firebase.firestore.collection("users").document(keyid).get().await()
+            querySnapshot?.getBoolean("trainer") ?: false
         }
-        return ret
     }
 
+    @SuppressLint("QueryPermissionsNeeded")
     private fun webActionOnClick() {
         if (workoutsList[1].videoUrl.toString().isNotEmpty()) {
             intent = Intent()
