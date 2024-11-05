@@ -3,6 +3,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.SharedPreferences.Editor
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -11,12 +12,15 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.ui.graphics.Color
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import pojo.User
 import java.text.SimpleDateFormat
 import java.util.Locale
+import kotlin.math.log
 
 class ProfileActivity : AppCompatActivity() {
     private lateinit var userFiled: EditText
@@ -30,8 +34,9 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var spinnerLanguage: Spinner
     private lateinit var spinnerTheme : Spinner
-    private var isDarkTheme = true
-    private lateinit var userInfo : ArrayList<User>
+    private lateinit var editor : Editor
+    private lateinit var useride : String
+    private lateinit var user: User
 
 
 
@@ -40,6 +45,7 @@ class ProfileActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
+        useride = intent.getStringExtra("iduser").toString()
         userFiled = findViewById(R.id.userIdFiled)
         userNameFiled = findViewById(R.id.NameFiled)
         userSurnameFiled = findViewById(R.id.SurNameFiled)
@@ -48,22 +54,25 @@ class ProfileActivity : AppCompatActivity() {
         userType = findViewById(R.id.editText4)
         spinnerLanguage = findViewById(R.id.spinner2)
         spinnerTheme = findViewById(R.id.spinner3)
-
-        sharedPreferences = getSharedPreferences("document_sharedPreferences", MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences("sharedPreferences", MODE_PRIVATE)
+        editor = sharedPreferences.edit()
         val savedLanguage = sharedPreferences.getString("selected_language", "es")
         setLocale(savedLanguage ?: "es", this)
         val backButton: Button = findViewById(R.id.profileBackButton)
 
         backButton.setOnClickListener {
-            val intent = Intent(this@ProfileActivity, WorkoutsActivity::class.java)
+            val intent = Intent(this@ProfileActivity, WorkoutsActivity::class.java).apply {
+                putExtra("id", useride)
+            }
             startActivity(intent)
             finish()
+
         }
         ArrayAdapter.createFromResource(
             this, R.array.themeMode,
             android.R.layout.simple_spinner_item
         ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            adapter.setDropDownViewResource(R.layout.spinner_layout)
             spinnerTheme.adapter = adapter
         }
 
@@ -71,7 +80,7 @@ class ProfileActivity : AppCompatActivity() {
             this, R.array.Language,
             android.R.layout.simple_spinner_item
         ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            adapter.setDropDownViewResource(R.layout.spinner_layout)
             spinnerLanguage.adapter = adapter
         }
 
@@ -82,9 +91,8 @@ class ProfileActivity : AppCompatActivity() {
                     1 -> R.style.lighttheme
                     else -> R.style.Theme_GymAppXML
                 }
-
+                sharedPreferences.edit().putInt("selected_Theme", selectedThemeId).apply()
                 setTheme(selectedThemeId)
-                sharedPreferences.edit().putInt("selected_theme", selectedThemeId).apply()
 
 
 
@@ -105,7 +113,6 @@ class ProfileActivity : AppCompatActivity() {
               }
                 setLocale(selecetedlanguage, context = baseContext)
             }
-
             override fun onNothingSelected(p0: AdapterView<*>?) {
             }
         }*/
@@ -113,6 +120,7 @@ class ProfileActivity : AppCompatActivity() {
         setupLanguageSpinner()
         showUserData()
         disableTextFiled()
+        Log.i("ididid","el id es ${useride}")
 
 
     }
@@ -148,9 +156,9 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun showUserData() {
         val db = Firebase.firestore
-        val userId = intent.getStringExtra("iduser")
 
-        userId?.let { id ->
+
+        useride.let { id ->
             db.collection("users").document(id).get()
                 .addOnSuccessListener { document ->
                     if (document != null) {
@@ -159,18 +167,17 @@ class ProfileActivity : AppCompatActivity() {
                         val userEmail = document.getString("mail")
                         val userBirtyDate = document.getTimestamp("birthDate")
                         val isTrainer = document.getBoolean("trainer")
-
-
-
+                        var trainerOCliente : String? = null
                         if (isTrainer == true) {
-                            userType.setText("Entrenador")
+                            trainerOCliente = "Entrenador"
                         } else {
-                            userType.setText("Cliente")
+                            trainerOCliente = "Cliente"
                         }
                         val formattedDate = userBirtyDate?.toDate()?.let {
                             SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(it)
                         }
-                        val user = userName?.let {
+
+                        user = userName?.let {
                             User(
                                 it,
                                 userSurname,
@@ -178,13 +185,12 @@ class ProfileActivity : AppCompatActivity() {
                                 formattedDate,
                                 isTrainer
                             )
-                        }
+                        }!!
+                        loadUserInfo(user)
 
-                        userFiled.setText(userId)
-                        userNameFiled.setText(userName)
-                        userSurnameFiled.setText(userSurname)
-                        userEmailFiled.setText(userEmail)
-                        userBirtyDateFiled.setText(formattedDate)
+                        editor.putString("thisId",useride)
+                        editor.apply()
+
                     }
                 }
                 .addOnFailureListener { exception ->
@@ -192,6 +198,18 @@ class ProfileActivity : AppCompatActivity() {
 
                 }
         }
+    }
+    private fun loadUserInfo (user: User){
+        userFiled.setText(useride)
+        userNameFiled.setText(user.name)
+        userSurnameFiled.setText(user.surname)
+        userEmailFiled.setText(user.mail)
+        val formattedDate = user.birthDate?.let {
+            SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(it)
+        }
+        userBirtyDateFiled.setText(formattedDate)
+        userType.setText(if(user.trainer == true)"Entrenador" else "Cliente")
+
     }
 
     private fun disableTextFiled() {
