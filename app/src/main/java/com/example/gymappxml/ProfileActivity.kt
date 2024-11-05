@@ -1,12 +1,8 @@
 package com.example.gymappxml
-
 import android.annotation.SuppressLint
 import android.content.Context
-
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.res.Configuration
-import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -15,10 +11,7 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
-import android.widget.Switch
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
-import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import pojo.User
@@ -57,7 +50,8 @@ class ProfileActivity : AppCompatActivity() {
         spinnerTheme = findViewById(R.id.spinner3)
 
         sharedPreferences = getSharedPreferences("document_sharedPreferences", MODE_PRIVATE)
-
+        val savedLanguage = sharedPreferences.getString("selected_language", "es")
+        setLocale(savedLanguage ?: "es", this)
         val backButton: Button = findViewById(R.id.profileBackButton)
 
         backButton.setOnClickListener {
@@ -81,7 +75,7 @@ class ProfileActivity : AppCompatActivity() {
             spinnerLanguage.adapter = adapter
         }
 
-        /*spinnerTheme.onItemSelectedListener = object  : AdapterView.OnItemSelectedListener{
+        spinnerTheme.onItemSelectedListener = object  : AdapterView.OnItemSelectedListener{
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 val selectedThemeId = when(p2){
                     0 -> R.style.Theme_GymAppXML
@@ -92,32 +86,64 @@ class ProfileActivity : AppCompatActivity() {
                 setTheme(selectedThemeId)
                 sharedPreferences.edit().putInt("selected_theme", selectedThemeId).apply()
 
-                recreate()
+
+
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 TODO("Not yet implemented")
             }
 
-        }*/
+        }
 
-        spinnerLanguage.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        /*spinnerLanguage.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, view: View?, p2: Int, p3: Long) {
               val selecetedlanguage = when(p2){
-                  0 -> "es-rES"
-                  1 -> "en-rUS"
-                  else -> "es-rES"
+                  0 -> "es"
+                  1 -> "en"
+                  else -> "es"
               }
                 setLocale(selecetedlanguage, context = baseContext)
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
             }
-        }
+        }*/
 
-
+        setupLanguageSpinner()
         showUserData()
         disableTextFiled()
+
+
+    }
+    private fun setupLanguageSpinner() {
+        val savedLanguage = sharedPreferences.getString("selected_language", "en")
+        val position = when (savedLanguage) {
+            "en" ->0
+            "es" -> 1
+            else -> 0
+        }
+        spinnerLanguage.setSelection(position)
+
+        spinnerLanguage.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(p0: AdapterView<*>?, view: View?, p2: Int, p3: Long) {
+                val selectedLanguage = when (p2) {
+                    0 -> "en"
+                    1 -> "es"
+                    else -> "en"
+                }
+
+                val currentLanguage = sharedPreferences.getString("selected_language", "es")
+
+                if (currentLanguage != selectedLanguage) {
+                    sharedPreferences.edit().putString("selected_language", selectedLanguage).apply()
+                    setLocale(selectedLanguage, context = baseContext)
+                    recreate()
+                }
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {}
+        }
     }
 
     private fun showUserData() {
@@ -141,19 +167,15 @@ class ProfileActivity : AppCompatActivity() {
                         } else {
                             userType.setText("Cliente")
                         }
-                        userBirtyDate?.let {
-                            val date = it.toDate()
-                            val dateFormat =
-                                SimpleDateFormat("dd-MM-yyyy", java.util.Locale.getDefault())
-                            val formattedDate = dateFormat.format(date)
-                            userBirtyDateFiled.setText(formattedDate)
+                        val formattedDate = userBirtyDate?.toDate()?.let {
+                            SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(it)
                         }
                         val user = userName?.let {
                             User(
                                 it,
                                 userSurname,
                                 userEmail,
-                                userBirtyDate.toString(),
+                                formattedDate,
                                 isTrainer
                             )
                         }
@@ -162,6 +184,7 @@ class ProfileActivity : AppCompatActivity() {
                         userNameFiled.setText(userName)
                         userSurnameFiled.setText(userSurname)
                         userEmailFiled.setText(userEmail)
+                        userBirtyDateFiled.setText(formattedDate)
                     }
                 }
                 .addOnFailureListener { exception ->
@@ -181,12 +204,16 @@ class ProfileActivity : AppCompatActivity() {
     }
 
 }
-    private fun setLocale(languageCode : String,context : Context){
+private fun setLocale(languageCode: String, context: Context) {
+    val locale = Locale(languageCode)
+    Locale.setDefault(locale)
+    val config = context.resources.configuration
+    config.setLocale(locale)
+    context.resources.updateConfiguration(config, context.resources.displayMetrics)
+}
 
-        val locale = Locale(languageCode)
-        Locale.setDefault(locale)
-        val config = context.resources.configuration
-        config.setLocale(locale)
-        context.resources.updateConfiguration(config,context.resources.displayMetrics)
-    }
+
+
+
+
 
