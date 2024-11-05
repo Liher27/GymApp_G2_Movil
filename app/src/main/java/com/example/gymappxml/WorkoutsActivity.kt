@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
-import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ListView
@@ -20,61 +18,64 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import pojo.Exercise
 import pojo.Workout
 
 
 class WorkoutsActivity : AppCompatActivity() {
-    private lateinit var keyid: String
+
     private lateinit var showLevel: TextView
     private lateinit var filterText: TextView
-
     private lateinit var workoutsListView: ListView
     private lateinit var exerciseListView: ListView
 
     private lateinit var chooser: Intent
 
-    private lateinit var trainerButton: Button
-
     private lateinit var workoutsList: List<Workout>
     private lateinit var workoutsNames: List<String>
-    private lateinit var workoutsAdapter: ArrayAdapter<String>
     private lateinit var exerciseList: List<String>
+    private lateinit var historicList: List<Exercise>
+    private lateinit var workoutsAdapter: ArrayAdapter<String>
+
+    private lateinit var keyid: String
+    private lateinit var videoUrl: String
+    private lateinit var workoutName: String
     private lateinit var exerciseProgress: String
+    private lateinit var id: String
+
     private lateinit var exerciseDateFinish: Timestamp
+
     private var exerciseTime: Int = 0
     private var exerciseTotalTime: Int = 0
-
-    private lateinit var workoutName: String
     private var workoutLevel: Int = 0
-    private lateinit var id: String
+
+    private var isTrainer: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_workouts)
-
-        trainerButton = findViewById(R.id.trainerButton)
         keyid = intent.getStringExtra("id") ?: "default_value"
         showLevel = findViewById(R.id.textView2)
-
+        filterText = findViewById(R.id.editNumberText)
+        videoUrl = ""
         getUserLevel()
         lifecycleScope.launch {
             loadWorkouts()
+            isTrainer = userIsTrainer()
 
-            if (userIsTrainer()) {
-                trainerButton.visibility = View.VISIBLE
-            } else {
-                trainerButton.visibility = View.GONE
-            }
         }
 
-
-
         findViewById<Button>(R.id.trainerButton).setOnClickListener {
-            val intent = Intent(this@WorkoutsActivity, TrainerActivity::class.java).apply {
-                putExtra("id", keyid)
+            if (isTrainer) {
+                val intent = Intent(this@WorkoutsActivity, TrainerActivity::class.java).apply {
+                    putExtra("id", keyid)
+                }
+                startActivity(intent)
+                finish()
+            } else {
+                Toast.makeText(this, "No eres un entrenador", Toast.LENGTH_SHORT).show()
             }
-            startActivity(intent)
-            finish()
+
         }
 
         findViewById<Button>(R.id.workoutBackBtn).setOnClickListener {
@@ -84,17 +85,25 @@ class WorkoutsActivity : AppCompatActivity() {
             finish()
         }
         findViewById<Button>(R.id.workoutFilteringBtn).setOnClickListener {
-            if (filterText.text.toString().isEmpty()) {
+            if (filterText.text.isEmpty()) {
                 Toast.makeText(this, "No has seleccionado ningún nivel", Toast.LENGTH_SHORT).show()
+                lifecycleScope.launch {
+                    loadWorkouts()
+                }
             } else {
-               // val level = filterText.text.toString().toInt()
-                //    filterWorkouts(level)
+                val level = filterText.text.toString().toInt()
+                filterWorkouts(level)
             }
 
         }
 
         findViewById<Button>(R.id.button3).setOnClickListener {
-            webActionOnClick()
+            if (videoUrl.isNotEmpty()) {
+                webActionOnClick(videoUrl)
+            } else {
+                Toast.makeText(this, "No hay ningun video", Toast.LENGTH_SHORT).show()
+            }
+
         }
 
         findViewById<Button>(R.id.profileButton).setOnClickListener {
@@ -107,17 +116,30 @@ class WorkoutsActivity : AppCompatActivity() {
 
         workoutsListView.setOnItemClickListener { _, _, position, _ ->
             loadExercises(position)
+            videoUrl = workoutsList[position].videoUrl.toString()
         }
     }
 
 
-    //  private fun filterWorkouts(level: Int) {
+    private fun filterWorkouts(level: Int) {
+        if (level < workoutsList.size) {
+            for (workout in workoutsList) {
+                if (workout.workoutLevel == level) {
+                    (workoutsNames as MutableList<String>).add(workout.workoutName!!)
+                    workoutsAdapter.notifyDataSetChanged()
+                } else {
+                    (workoutsNames as MutableList<String>).remove(workout.workoutName!!)
+                }
+            }
+        } else
+            Toast.makeText(this, "No hay ningun nivel", Toast.LENGTH_SHORT).show()
 
-    //   }
+    }
 
     private suspend fun loadWorkouts() {
         workoutName = ""
         workoutsNames = mutableListOf()
+        historicList = mutableListOf()
         val db = Firebase.firestore
         val userId = intent.getStringExtra("id")
         workoutsListView = findViewById(R.id.workoutList)
@@ -128,7 +150,7 @@ class WorkoutsActivity : AppCompatActivity() {
                 val result =
                     db.collection("users").document(id).collection("userHistory_0").get()
                         .await()
-                Log.e("result", result.size().toString())
+
                 for (document in result) {
 
                     val workoutNameRef = document.getDocumentReference("workoutName")
@@ -138,6 +160,18 @@ class WorkoutsActivity : AppCompatActivity() {
                     exerciseTotalTime = document.getLong("totalTime")?.toInt()!!
                     exerciseProgress = document.getString("exercisePercent")!!
                     exerciseDateFinish = document.getTimestamp("finishDate")!!
+
+                    val exercise = Exercise(
+                        null,
+                        null,
+                        null,
+                        null,
+                        exerciseProgress,
+                        exerciseDateFinish,
+                        exerciseTotalTime,
+                        exerciseTime
+                    )
+                    (historicList as MutableList<Exercise>).add(exercise)
 
                     workoutLevelRef?.get()?.await()?.let { workoutDocument ->
                         workoutLevel = workoutDocument.getLong("level")?.toInt()!!
@@ -161,6 +195,16 @@ class WorkoutsActivity : AppCompatActivity() {
                         }
                     }
                 }
+                db.collection("workouts").get().addOnSuccessListener { workoutresult ->
+                    for (document in workoutresult) {
+                        val workoutUrl = document.getString("video")
+                        workoutsList.forEach { workout ->
+                            if (workout.workoutName == document.getString("workoutName")) {
+                                workout.videoUrl = workoutUrl
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -170,7 +214,6 @@ class WorkoutsActivity : AppCompatActivity() {
             val querySnapshot = Firebase.firestore.collection("workouts")
                 .whereEqualTo("workoutName", workoutName).get().await()
             if (!querySnapshot.isEmpty) {
-                Log.e("ID", querySnapshot.documents[0].id)
                 querySnapshot.documents[0].id
             } else {
                 ""
@@ -196,6 +239,24 @@ class WorkoutsActivity : AppCompatActivity() {
                         document.getLong("restTime")?.toInt()
                     val seriesNumber =
                         document.getLong("seriesNumber")?.toInt()
+
+                    for (exercise in historicList) {
+
+                        (exerciseList as MutableList<String>).add(
+                            "Fecha de finalización: ${exercise.finishDate?.toDate()}"
+                        )
+                        (exerciseList as MutableList<String>).add(
+                            "Tiempo de progreso: ${exercise.progress}"
+                        )
+                        (exerciseList as MutableList<String>).add(
+                            "Tiempo total: ${exercise.totalTime}"
+                        )
+                        (exerciseList as MutableList<String>).add(
+                            "Tiempo proporcionado: ${exercise.providedTime}"
+                        )
+
+                    }
+
                     (exerciseList as MutableList<String>).add(
                         "Nombre: $exerciseName"
                     )
@@ -229,29 +290,29 @@ class WorkoutsActivity : AppCompatActivity() {
                     val levelText = "Nivel del usuario: $level"
                     showLevel.text = levelText
                 }
-            }.addOnFailureListener { exception ->
-                Log.e("showUserData", "Error getting user data: ", exception)
-
+            }.addOnFailureListener {
+                Toast.makeText(this, "Error al obtener el nivel del usuario", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }
 
     private suspend fun userIsTrainer(): Boolean {
         return withContext(Dispatchers.IO) {
-            val querySnapshot = Firebase.firestore.collection("users").document(keyid).get().await()
+            val querySnapshot =
+                Firebase.firestore.collection("users").document(keyid).get().await()
             querySnapshot?.getBoolean("trainer") ?: false
         }
     }
 
     @SuppressLint("QueryPermissionsNeeded")
-    private fun webActionOnClick() {
-        if (workoutsList[1].videoUrl.toString().isNotEmpty()) {
+    private fun webActionOnClick(videoUrl: String) {
+        if (videoUrl.isNotEmpty()) {
             intent = Intent()
             intent.setAction(Intent.ACTION_VIEW)
-            var videoUrl: String = workoutsList[1].videoUrl.toString()
-            Log.e("URL", videoUrl)
-            videoUrl = if (videoUrl.contains("http://")) videoUrl else "https://$videoUrl"
-            intent.setData(Uri.parse(videoUrl))
+            val intentUrl: String =
+                if (videoUrl.contains("https://")) videoUrl else "https://$videoUrl"
+            intent.setData(Uri.parse(intentUrl))
 
             chooser = Intent.createChooser(intent, getText(R.string.txt_intent_web))
 

@@ -36,6 +36,15 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".TrainerActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.ALTERNATIVE" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".ProfileActivity"
             android:exported="true">
             <intent-filter>
