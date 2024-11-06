@@ -12,6 +12,10 @@
     <string name="workoutsInfo">Información de workouts</string>
     <string name="filterHint">Filtrar por nivel</string>
     <string name="filterButton">Filtrar</string>
+    <string name="trainerTitle">ENTRENADOR</string>
+    <string name="deleteButton">Eliminar</string>
+    <string name="modifyButton">Modificar</string>
+    <string name="addButton">Añadir</string>
     <string name="trainerButton">Entrenador</string>
     <string name="userLvl">Nivel de usuario: </string>
     <string name="passLogin">Contraseña</string>

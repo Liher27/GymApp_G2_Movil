@@ -18,6 +18,10 @@
     <string name="enter_user">enter_user</string>
     <string name="loginTextView">Inicio de sesión</string>
     <string name="txt_ok" translatable="false">OK!</string>
+    <string name="trainerTitle">ENTRENADOR</string>
+    <string name="deleteButton">Eliminar</string>
+    <string name="modifyButton">Modificar</string>
+    <string name="addButton">Añadir</string>
     <string name="videoButtonTxt" translatable="false">Reproducir video</string>
     <string name="editTextname">Nombre</string>
     <string name="editTextDate">Fecha de Nacimiento</string>

@@ -112,6 +112,7 @@ class WorkoutsActivity : AppCompatActivity() {
         }
 
         workoutsListView.setOnItemClickListener { _, _, position, _ ->
+
             loadExercises(position)
             videoUrl = workoutsList[position].videoUrl.toString()
         }
@@ -163,7 +164,7 @@ class WorkoutsActivity : AppCompatActivity() {
 
                     workoutNameRef?.get()?.await()?.let { workoutDocument ->
                         workoutName = workoutDocument.getString("workoutName")!!
-                    
+
                         val workoutId = getDocumentID(workoutName)
                         val workout = Workout(
                             workoutName,

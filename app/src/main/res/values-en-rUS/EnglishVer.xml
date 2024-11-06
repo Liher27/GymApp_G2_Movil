@@ -16,6 +16,10 @@
     <string name="trainerButton">Trainer</string>
     <string name="userLvl">User level: </string>
     <string name="txt_ok">OK!</string>
+    <string name="trainerTitle">TRAINER</string>
+    <string name="deleteButton">Delete</string>
+    <string name="modifyButton">Modify</string>
+    <string name="addButton">Add</string>
     <string name="videoButtonTxt">Reproduce video</string>
     <string name="passLogin">Password</string>
     <string name="enter_user">Log_User</string>
