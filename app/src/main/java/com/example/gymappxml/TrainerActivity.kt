@@ -119,11 +119,9 @@ class TrainerActivity : AppCompatActivity() {
     }
 
     private suspend fun loadWorkouts() {
-        workoutName = ""
         workoutsNames = mutableListOf()
         historicInfo = hashMapOf()
         val db = Firebase.firestore
-        val userId = intent.getStringExtra("id")
         workoutsListView = findViewById(R.id.workoutList)
         workoutsList = mutableListOf()
 
@@ -134,12 +132,8 @@ class TrainerActivity : AppCompatActivity() {
 
             for (document in result) {
                 val workoutName = document.getString("workoutName")
-                val workoutLevel = document.getLong("workoutLevel")?.toInt()!!
-
+                val workoutLevel = document.getLong("level")?.toInt()!!
                 val workoutProgress = document.getString("exercisePercent")
-                val workoutProvidedTime = document.getLong("providedTime")?.toInt()!!
-                val workoutTotalTime = document.getLong("totalTime")?.toInt()!!
-                val workoutFinishDate = document.getTimestamp("finishDate")
                 val workoutUrl = document.getString("video")
                 val workoutId = workoutName?.let { getDocumentID(it) }
                 val workout = Workout(
@@ -150,9 +144,9 @@ class TrainerActivity : AppCompatActivity() {
                     null,
                     null,
                     workoutProgress,
-                    workoutFinishDate,
-                    workoutProvidedTime,
-                    workoutTotalTime
+                    null,
+                    null,
+                    null
                 )
                 historicInfo[workoutLevel] = workout
                 workoutInfo = "Nombre: $workoutName Nivel $workoutLevel"
