@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ListView
@@ -40,13 +41,9 @@ class WorkoutsActivity : AppCompatActivity() {
     private lateinit var keyid: String
     private lateinit var videoUrl: String
     private lateinit var workoutName: String
-    private lateinit var exerciseProgress: String
+    private lateinit var workoutInfo: String
     private lateinit var id: String
 
-    private lateinit var exerciseDateFinish: Timestamp
-
-    private var exerciseTime: Int = 0
-    private var exerciseTotalTime: Int = 0
     private var workoutLevel: Int = 0
 
     private var isTrainer: Boolean = false
@@ -155,23 +152,10 @@ class WorkoutsActivity : AppCompatActivity() {
 
                     val workoutNameRef = document.getDocumentReference("workoutName")
                     val workoutLevelRef = document.getDocumentReference("workoutLevel")
-
-                    exerciseTime = document.getLong("providedTime")?.toInt()!!
-                    exerciseTotalTime = document.getLong("totalTime")?.toInt()!!
-                    exerciseProgress = document.getString("exercisePercent")!!
-                    exerciseDateFinish = document.getTimestamp("finishDate")!!
-
-                    val exercise = Exercise(
-                        null,
-                        null,
-                        null,
-                        null,
-                        exerciseProgress,
-                        exerciseDateFinish,
-                        exerciseTotalTime,
-                        exerciseTime
-                    )
-                    (historicList as MutableList<Exercise>).add(exercise)
+                    val workoutProgress = document.getString("exercisePercent")
+                    val workoutProvidedTime = document.getLong("providedTime")?.toInt()!!
+                    val workoutTotalTime = document.getLong("totalTime")?.toInt()!!
+                    val workoutFinishDate = document.getTimestamp("finishDate")
 
                     workoutLevelRef?.get()?.await()?.let { workoutDocument ->
                         workoutLevel = workoutDocument.getLong("level")?.toInt()!!
@@ -180,10 +164,21 @@ class WorkoutsActivity : AppCompatActivity() {
                     workoutNameRef?.get()?.await()?.let { workoutDocument ->
                         workoutName = workoutDocument.getString("workoutName")!!
                         val workoutId = getDocumentID(workoutName)
-                        val workout = Workout(workoutName, workoutLevel, workoutId)
-
+                        val workout = Workout(
+                            workoutName,
+                            workoutLevel,
+                            workoutId,
+                            null,
+                            null,
+                            null,
+                            workoutProgress,
+                            workoutFinishDate,
+                            workoutProvidedTime,
+                            workoutTotalTime
+                        )
+                       workoutInfo = "Nombre: $workoutName Nivel $workoutLevel"
                         (workoutsList as MutableList<Workout>).add(workout)
-                        (workoutsNames as MutableList<String>).add(workout.workoutName!!)
+                        (workoutsNames as MutableList<String>).add(workoutInfo)
 
                         withContext(Dispatchers.Main) {
                             workoutsAdapter = ArrayAdapter(
@@ -223,10 +218,10 @@ class WorkoutsActivity : AppCompatActivity() {
     }
 
     private fun loadExercises(index: Int) {
-        val db = Firebase.firestore
+        var i = 0
         exerciseListView = findViewById(R.id.exerciseView)
         exerciseList = mutableListOf()
-
+        val db = Firebase.firestore
         id = workoutsList[index].workoutId.toString()
 
         db.collection("workouts").document(id)
@@ -235,36 +230,21 @@ class WorkoutsActivity : AppCompatActivity() {
                 for (document in result) {
                     val exerciseName =
                         document.getString("exerciseName")
-                    val restTime =
-                        document.getLong("restTime")?.toInt()
-                    val seriesNumber =
-                        document.getLong("seriesNumber")?.toInt()
-
-                    for (exercise in historicList) {
-
-                        (exerciseList as MutableList<String>).add(
-                            "Fecha de finalización: ${exercise.finishDate?.toDate()}"
-                        )
-                        (exerciseList as MutableList<String>).add(
-                            "Tiempo de progreso: ${exercise.progress}"
-                        )
-                        (exerciseList as MutableList<String>).add(
-                            "Tiempo total: ${exercise.totalTime}"
-                        )
-                        (exerciseList as MutableList<String>).add(
-                            "Tiempo proporcionado: ${exercise.providedTime}"
-                        )
-
-                    }
 
                     (exerciseList as MutableList<String>).add(
                         "Nombre: $exerciseName"
                     )
                     (exerciseList as MutableList<String>).add(
-                        "Tiempo de descanso: $restTime"
+                        "Tiempo total: ${workoutsList[i].totalTime}"
                     )
                     (exerciseList as MutableList<String>).add(
-                        "Número de series: $seriesNumber"
+                        "Tiempo proporcionado: ${workoutsList[i].providedTime}"
+                    )
+                    (exerciseList as MutableList<String>).add(
+                        "Porcentaje de progreso: ${workoutsList[i].exercisePercent}"
+                    )
+                    (exerciseList as MutableList<String>).add(
+                        "Fecha de finalización: ${workoutsList[i].finishDate?.toDate()}"
                     )
                     (exerciseList as MutableList<String>).add(
                         ""
@@ -277,8 +257,11 @@ class WorkoutsActivity : AppCompatActivity() {
                             exerciseList
                         )
                     exerciseListView.adapter = adapter
+
+                    i++
                 }
             }
+
     }
 
     private fun getUserLevel() {
