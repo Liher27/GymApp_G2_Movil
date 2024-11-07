@@ -12,15 +12,12 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.ui.graphics.Color
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import pojo.User
 import java.text.SimpleDateFormat
 import java.util.Locale
-import kotlin.math.log
 
 class ProfileActivity : AppCompatActivity() {
     private lateinit var userFiled: EditText
@@ -107,7 +104,7 @@ class ProfileActivity : AppCompatActivity() {
         setupLanguageSpinner()
         showUserData()
         disableTextFiled()
-        Log.i("ididid","el id es ${useride}")
+        Log.i("ididid","el id es $useride")
 
 
     }
@@ -154,12 +151,6 @@ class ProfileActivity : AppCompatActivity() {
                         val userEmail = document.getString("mail")
                         val userBirtyDate = document.getTimestamp("birthDate")
                         val isTrainer = document.getBoolean("trainer")
-                        var trainerOCliente : String? = null
-                        if (isTrainer == true) {
-                            trainerOCliente = "Entrenador"
-                        } else {
-                            trainerOCliente = "Cliente"
-                        }
                         val formattedDate = userBirtyDate?.toDate()?.let {
                             SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(it)
                         }
