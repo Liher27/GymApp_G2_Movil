@@ -1,13 +1,15 @@
 package com.example.gymappxml
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.Firebase
@@ -29,16 +31,16 @@ class TrainerActivity : AppCompatActivity() {
     private lateinit var workoutsNames: List<String>
     private lateinit var exerciseList: List<String>
     private lateinit var workoutsAdapter: ArrayAdapter<String>
-    private lateinit var historicInfo: HashMap<Int, Workout>
+    private lateinit var workoutMap: HashMap<Int, Workout>
 
     private lateinit var keyid: String
     private lateinit var videoUrl: String
-    private lateinit var workoutName: String
     private lateinit var workoutInfo: String
     private lateinit var id: String
 
+    private var workoutSelected: Boolean = false
+
     private var listIndex: Int = 0
-    private var workoutLevel: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,7 +62,11 @@ class TrainerActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.trainerModifyButton).setOnClickListener {
-
+            if (workoutSelected)
+                modifyWorkout(workoutsList[listIndex])
+            else
+                Toast.makeText(this, "No has seleccionado ningún workout", Toast.LENGTH_SHORT)
+                    .show()
         }
 
         findViewById<Button>(R.id.trainerDeleteBtn).setOnClickListener {
@@ -87,9 +93,44 @@ class TrainerActivity : AppCompatActivity() {
         }
 
         workoutsListView.setOnItemClickListener { _, _, position, _ ->
+            workoutSelected = true
             listIndex = position
             loadExercises(listIndex)
-            videoUrl = workoutsList[listIndex].videoUrl.toString()
+            videoUrl = workoutsList[listIndex].video.toString()
+        }
+    }
+
+    private fun modifyWorkout(workout: Workout) {
+        val db = Firebase.firestore
+        workout.workoutName
+
+        showInputDialog(this@TrainerActivity, "Ingresa el nuevo nombre") { name ->
+            workout.workoutName = name
+        }
+        showInputDialog(this@TrainerActivity, "Ingresa el nuevo nivel del workout") { level ->
+            workout.level = level.toInt()
+        }
+        showInputDialog(this@TrainerActivity, "Ingresa un nuevo link") { videoUrl ->
+            workout.video = videoUrl
+
+            workout.workoutId?.let {
+                db.collection("workouts").document(it)
+                    .set(workout)
+                    .addOnSuccessListener {
+                        Toast.makeText(
+                            this@TrainerActivity,
+                            "Workout modificado!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(
+                            this@TrainerActivity,
+                            "No se ha podido modificar el workout",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+            }
         }
     }
 
@@ -106,7 +147,7 @@ class TrainerActivity : AppCompatActivity() {
     private fun filterWorkouts(level: Int) {
         if (level < workoutsList.size) {
             for (workout in workoutsList) {
-                if (workout.workoutLevel == level) {
+                if (workout.level == level) {
                     (workoutsNames as MutableList<String>).add(workout.workoutName!!)
                     workoutsAdapter.notifyDataSetChanged()
                 } else {
@@ -120,7 +161,7 @@ class TrainerActivity : AppCompatActivity() {
 
     private suspend fun loadWorkouts() {
         workoutsNames = mutableListOf()
-        historicInfo = hashMapOf()
+        workoutMap = hashMapOf()
         val db = Firebase.firestore
         workoutsListView = findViewById(R.id.workoutList)
         workoutsList = mutableListOf()
@@ -133,23 +174,16 @@ class TrainerActivity : AppCompatActivity() {
             for (document in result) {
                 val workoutName = document.getString("workoutName")
                 val workoutLevel = document.getLong("level")?.toInt()!!
-                val workoutProgress = document.getString("exercisePercent")
                 val workoutUrl = document.getString("video")
                 val workoutId = workoutName?.let { getDocumentID(it) }
                 val workout = Workout(
                     workoutName,
                     workoutLevel,
                     workoutId,
-                    workoutUrl,
-                    null,
-                    null,
-                    workoutProgress,
-                    null,
-                    null,
-                    null
+                    workoutUrl
                 )
-                historicInfo[workoutLevel] = workout
-                workoutInfo = "Nombre: $workoutName Nivel $workoutLevel"
+                workoutMap[workoutLevel] = workout
+                workoutInfo = "Workout $workoutName"
                 (workoutsList as MutableList<Workout>).add(workout)
                 (workoutsNames as MutableList<String>).add(workoutInfo)
 
@@ -183,6 +217,24 @@ class TrainerActivity : AppCompatActivity() {
         exerciseList = mutableListOf()
         val db = Firebase.firestore
         id = workoutsList[index].workoutId.toString()
+        val level = workoutsList[index].level
+        val videoUrl = workoutsList[index].video
+
+        (exerciseList as MutableList<String>).add(
+            "Nivel: $level "
+        )
+
+        (exerciseList as MutableList<String>).add(
+            "Video: $videoUrl"
+        )
+
+        (exerciseList as MutableList<String>).add(
+            ""
+        )
+
+        (exerciseList as MutableList<String>).add(
+            "Ejercicios:"
+        )
 
         db.collection("workouts").document(id)
             .collection("workoutExercises").get()
@@ -191,23 +243,23 @@ class TrainerActivity : AppCompatActivity() {
                     val exerciseName =
                         document.getString("exerciseName")
 
-                    (exerciseList as MutableList<String>).add(
-                        "Nombre: $exerciseName"
-                    )
-                    (exerciseList as MutableList<String>).add(
-                        "Tiempo total: ${historicInfo[workoutsList[index].workoutLevel]?.totalTime}"
-                    )
-                    (exerciseList as MutableList<String>).add(
-                        "Tiempo proporcionado: ${historicInfo[workoutsList[index].workoutLevel]?.providedTime}"
-                    )
-                    (exerciseList as MutableList<String>).add(
-                        "Porcentaje de progreso: ${historicInfo[workoutsList[index].workoutLevel]?.exercisePercent}"
-                    )
-                    (exerciseList as MutableList<String>).add(
-                        "Fecha de finalización: ${historicInfo[workoutsList[index].workoutLevel]?.finishDate?.toDate()}"
-                    )
+                    val exerciseRestTime = document.getLong("restTime")?.toInt()!!.toString()
+
+                    val exerciseSeriesNumber = document.getLong("seriesNumber")?.toInt()!!.toString()
+
                     (exerciseList as MutableList<String>).add(
                         ""
+                    )
+
+                    (exerciseList as MutableList<String>).add(
+                        "Nombre del ejercicio: $exerciseName"
+                    )
+                    (exerciseList as MutableList<String>).add(
+                        "Tiempo de descanso: $exerciseRestTime minutos"
+                    )
+
+                    (exerciseList as MutableList<String>).add(
+                        "Numero de series: $exerciseSeriesNumber"
                     )
 
                     val adapter =
@@ -222,4 +274,19 @@ class TrainerActivity : AppCompatActivity() {
             }
 
     }
+}
+
+private fun showInputDialog(context: Context, title: String, onInputReceived: (String) -> Unit) {
+    val input = EditText(context)
+
+    AlertDialog.Builder(context).apply {
+        setTitle(title)
+        setView(input)
+        setPositiveButton("Aceptar") { _, _ ->
+            onInputReceived(input.text.toString())
+        }
+        setNegativeButton("Cancelar") { dialog, _ ->
+            dialog.dismiss()
+        }
+    }.show()
 }

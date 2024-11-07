@@ -17,7 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import pojo.Exercise
+import pojo.Historic
 import pojo.Workout
 
 
@@ -34,7 +34,7 @@ class WorkoutsActivity : AppCompatActivity() {
     private lateinit var workoutsNames: List<String>
     private lateinit var exerciseList: List<String>
     private lateinit var workoutsAdapter: ArrayAdapter<String>
-    private lateinit var historicInfo: HashMap<Int, Workout>
+    private lateinit var historicInfo: HashMap<Int, Historic>
 
     private lateinit var keyid: String
     private lateinit var videoUrl: String
@@ -59,7 +59,6 @@ class WorkoutsActivity : AppCompatActivity() {
         lifecycleScope.launch {
             loadWorkouts()
             isTrainer = userIsTrainer()
-
         }
 
         findViewById<Button>(R.id.trainerButton).setOnClickListener {
@@ -114,7 +113,7 @@ class WorkoutsActivity : AppCompatActivity() {
         workoutsListView.setOnItemClickListener { _, _, position, _ ->
 
             loadExercises(position)
-            videoUrl = workoutsList[position].videoUrl.toString()
+            videoUrl = workoutsList[position].video.toString()
         }
     }
 
@@ -122,7 +121,7 @@ class WorkoutsActivity : AppCompatActivity() {
     private fun filterWorkouts(level: Int) {
         if (level < workoutsList.size) {
             for (workout in workoutsList) {
-                if (workout.workoutLevel == level) {
+                if (workout.level == level) {
                     (workoutsNames as MutableList<String>).add(workout.workoutName!!)
                     workoutsAdapter.notifyDataSetChanged()
                 } else {
@@ -171,6 +170,12 @@ class WorkoutsActivity : AppCompatActivity() {
                             workoutLevel,
                             workoutId,
                             null,
+                        )
+                        val historic = Historic(
+                            workoutName,
+                            workoutLevel,
+                            workoutId,
+                            null,
                             null,
                             null,
                             workoutProgress,
@@ -178,7 +183,8 @@ class WorkoutsActivity : AppCompatActivity() {
                             workoutProvidedTime,
                             workoutTotalTime
                         )
-                        historicInfo[workoutLevel] = workout
+
+                        historicInfo[workoutLevel] = historic
                         workoutInfo = "Nombre: $workoutName Nivel $workoutLevel"
                         (workoutsList as MutableList<Workout>).add(workout)
                         (workoutsNames as MutableList<String>).add(workoutInfo)
@@ -198,7 +204,7 @@ class WorkoutsActivity : AppCompatActivity() {
                         val workoutUrl = document.getString("video")
                         workoutsList.forEach { workout ->
                             if (workout.workoutName == document.getString("workoutName")) {
-                                workout.videoUrl = workoutUrl
+                                workout.video = workoutUrl
                             }
                         }
                     }
@@ -237,16 +243,16 @@ class WorkoutsActivity : AppCompatActivity() {
                         "Nombre: $exerciseName"
                     )
                     (exerciseList as MutableList<String>).add(
-                        "Tiempo total: ${historicInfo[workoutsList[index].workoutLevel]?.totalTime}"
+                        "Tiempo total: ${historicInfo[workoutsList[index].level]?.totalTime}"
                     )
                     (exerciseList as MutableList<String>).add(
-                        "Tiempo proporcionado: ${historicInfo[workoutsList[index].workoutLevel]?.providedTime}"
+                        "Tiempo proporcionado: ${historicInfo[workoutsList[index].level]?.providedTime}"
                     )
                     (exerciseList as MutableList<String>).add(
-                        "Porcentaje de progreso: ${historicInfo[workoutsList[index].workoutLevel]?.exercisePercent}"
+                        "Porcentaje de progreso: ${historicInfo[workoutsList[index].level]?.exercisePercent}"
                     )
                     (exerciseList as MutableList<String>).add(
-                        "Fecha de finalización: ${historicInfo[workoutsList[index].workoutLevel]?.finishDate?.toDate()}"
+                        "Fecha de finalización: ${historicInfo[workoutsList[index].level]?.finishDate?.toDate()}"
                     )
                     (exerciseList as MutableList<String>).add(
                         ""
