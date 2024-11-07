@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">ErrekaFit</string>
-    <string name="LoginToStart">Login in to continue</string>
+    <string name="LoginToStart">Log in to continue</string>
+    <string name="registerToLogin">You have an account? Log in!</string>
     <string name="editTextLogin">Login</string>
+    <string name="loginButton">Login</string>
     <string name="errekafit">ERREKAFIT</string>
     <string name="workouts">WORKOUTS</string>
     <string name="login">Login</string>
@@ -23,7 +25,7 @@
     <string name="videoButtonTxt">Reproduce video</string>
     <string name="passLogin">Password</string>
     <string name="enter_user">Log_User</string>
-    <string name="loginTextView">Login in</string>
+    <string name="loginTextView">Login</string>
     <string name="editTextname">Name</string>
     <string name="editTextDate">Birty date</string>
     <string name="editTextTextEmailAddress">Mail</string>
@@ -43,6 +45,9 @@
     <string name="userName">userName\n</string>
     <string name="changeToProfile">Profile</string>
     <string name="estrainer">Are you Trainer?</string>
+    <string name="txt_error_2">Video not found</string>
+    <string name="txt_error_1">App error!</string>
+    <string name="txt_intent_web">Choose one of the next apps</string>
     <string-array name="userType">
         <item>Client</item>
         <item>Trainer</item>

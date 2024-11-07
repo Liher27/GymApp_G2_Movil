@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">ErrekaFit</string>
     <string name="LoginToStart">Inicia sesion para continuar</string>
+    <string name="registerToLogin">Ya tienes Cuenta? Logueate!</string>
     <string name="editTextLogin">Login</string>
+    <string name="loginButton">Iniciar sesión</string>
     <string name="errekafit">ERREKAFIT</string>
     <string name="workouts">WORKOUTS</string>
     <string name="login">Login</string>

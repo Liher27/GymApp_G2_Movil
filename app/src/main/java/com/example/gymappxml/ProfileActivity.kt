@@ -88,7 +88,7 @@ class ProfileActivity : AppCompatActivity() {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 val selectedThemeId = when(p2){
                     0 -> R.style.Theme_GymAppXML
-                    1 -> R.style.lighttheme
+                    1 -> R.style.lightTheme
                     else -> R.style.Theme_GymAppXML
                 }
                 sharedPreferences.edit().putInt("selected_Theme", selectedThemeId).apply()
@@ -103,19 +103,6 @@ class ProfileActivity : AppCompatActivity() {
             }
 
         }
-
-        /*spinnerLanguage.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(p0: AdapterView<*>?, view: View?, p2: Int, p3: Long) {
-              val selecetedlanguage = when(p2){
-                  0 -> "es"
-                  1 -> "en"
-                  else -> "es"
-              }
-                setLocale(selecetedlanguage, context = baseContext)
-            }
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-            }
-        }*/
 
         setupLanguageSpinner()
         showUserData()

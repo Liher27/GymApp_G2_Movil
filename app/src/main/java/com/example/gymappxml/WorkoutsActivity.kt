@@ -277,7 +277,7 @@ class WorkoutsActivity : AppCompatActivity() {
             db.collection("users").document(id).get().addOnSuccessListener { document ->
                 if (document != null) {
                     val level = document.getLong("userLevel")
-                    val levelText = "Nivel del usuario: $level"
+                    val levelText = "Lvl $level"
                     showLevel.text = levelText
                 }
             }.addOnFailureListener {

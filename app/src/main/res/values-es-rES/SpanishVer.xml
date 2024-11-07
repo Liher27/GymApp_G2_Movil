@@ -1,10 +1,12 @@
 <resources>
     <string name="app_name">ErrekaFit</string>
     <string name="LoginToStart">Inicia sesion para continuar</string>
+    <string name="registerToLogin">Ya tienes Cuenta? Logueate!</string>
     <string name="editTextLogin">Login</string>
     <string name="errekafit">ERREKAFIT</string>
     <string name="workouts">WORKOUTS</string>
     <string name="login">Login</string>
+    <string name="loginButton">Iniciar sesión</string>
     <string name="noAccountTextView">No tienes cuenta? Registrate!</string>
     <string name="todo">TODO</string>
     <string name="enter_password">Enter Password</string>
@@ -41,6 +43,9 @@
     <string name="userName">userName\n</string>
     <string name="changeToProfile">Perfil</string>
     <string name="estrainer">Es entrenador?</string>
+    <string name="txt_error_2">No se ha cargado el video</string>
+    <string name="txt_error_1">Ha habido un error en la aplicacion</string>
+    <string name="txt_intent_web">Elige una de las siguientes apps:</string>
     <string-array name="userType">
         <item>Client</item>
         <item>Trainer</item>

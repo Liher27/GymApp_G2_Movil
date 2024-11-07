@@ -1,12 +1,12 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Base.Theme.GymAppXML" parent="Theme.Material3.DayNight.NoActionBar">
     <item name="android:background">@color/dark_gray</item>
     </style>
 
 <style name="Theme.GymAppXML" parent="Base.Theme.GymAppXML" />
-    <style name="lighttheme" parent = "Base.Theme.GymAppXML">
-        <item name="android:background">@color/white</item>
+    <style name="lightTheme" parent = "Base.Theme.GymAppXML">
+        <item name="android:background">@color/dark_gray</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:editTextColor">@color/black</item>
     </style>

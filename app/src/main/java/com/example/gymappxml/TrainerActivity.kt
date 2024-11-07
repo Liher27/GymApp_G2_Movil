@@ -1,8 +1,10 @@
 package com.example.gymappxml
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
@@ -15,7 +17,9 @@ import androidx.lifecycle.lifecycleScope
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import pojo.Workout
@@ -62,9 +66,11 @@ class TrainerActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.trainerModifyButton).setOnClickListener {
-            if (workoutSelected)
-                modifyWorkout(workoutsList[listIndex])
-            else
+            if (workoutSelected) {
+                lifecycleScope.launch {
+                    modifyWorkout(workoutsList[listIndex])
+                }
+            } else
                 Toast.makeText(this, "No has seleccionado ningún workout", Toast.LENGTH_SHORT)
                     .show()
         }
@@ -76,7 +82,9 @@ class TrainerActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.trainerAddBtn).setOnClickListener {
-
+            lifecycleScope.launch {
+                createWorkout()
+            }
         }
 
         findViewById<Button>(R.id.workoutFilteringBtn).setOnClickListener {
@@ -100,37 +108,115 @@ class TrainerActivity : AppCompatActivity() {
         }
     }
 
-    private fun modifyWorkout(workout: Workout) {
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private suspend fun createWorkout() {
         val db = Firebase.firestore
-        workout.workoutName
+        val workout = Workout()
+        try {
+            val workoutId = suspendCancellableCoroutine<String?> { continuation ->
+                showInputDialog(this@TrainerActivity, "Ingresa el nuevo Id del workout") { input ->
+                    continuation.resume(input, null)
+                }
+            }
+            workout.workoutId = workoutId
 
-        showInputDialog(this@TrainerActivity, "Ingresa el nuevo nombre") { name ->
-            workout.workoutName = name
-        }
-        showInputDialog(this@TrainerActivity, "Ingresa el nuevo nivel del workout") { level ->
-            workout.level = level.toInt()
-        }
-        showInputDialog(this@TrainerActivity, "Ingresa un nuevo link") { videoUrl ->
+            val workoutName = suspendCancellableCoroutine<String?> { continuation ->
+                showInputDialog(this@TrainerActivity, "Ingresa el nuevo nombre") { input ->
+                    continuation.resume(input, null)
+                }
+            }
+            workout.workoutName = workoutName
+
+            val level = suspendCancellableCoroutine<Int?> { continuation ->
+                showInputDialog(
+                    this@TrainerActivity,
+                    "Ingresa el nuevo nivel del workout"
+                ) { input ->
+                    input.toIntOrNull()?.let { continuation.resume(it, null) }
+                }
+            }
+            level?.let { workout.level = it }
+
+            val videoUrl = suspendCancellableCoroutine<String?> { continuation ->
+                showInputDialog(this@TrainerActivity, "Ingresa un nuevo link") { input ->
+                    continuation.resume(input, null)
+                }
+            }
             workout.video = videoUrl
+            Log.e("workout", workout.toString())
 
             workout.workoutId?.let {
-                db.collection("workouts").document(it)
-                    .set(workout)
-                    .addOnSuccessListener {
-                        Toast.makeText(
-                            this@TrainerActivity,
-                            "Workout modificado!",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                    .addOnFailureListener {
-                        Toast.makeText(
-                            this@TrainerActivity,
-                            "No se ha podido modificar el workout",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                db.collection("workouts").document(it).set(workout).await()
+                Toast.makeText(this@TrainerActivity, "Workout creado!", Toast.LENGTH_SHORT).show()
             }
+        } catch (e: Exception) {
+            Toast.makeText(
+                this@TrainerActivity,
+                "No se ha podido modificar el workout",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
+        val builder = AlertDialog.Builder(this@TrainerActivity)
+        builder.setMessage("Quieres modificar un workout?")
+            .setPositiveButton("Yes", dialogClickListener)
+            .setNegativeButton("No", dialogClickListener).show()
+    }
+
+    private var dialogClickListener =
+        DialogInterface.OnClickListener { _, which ->
+            when (which) {
+                DialogInterface.BUTTON_POSITIVE -> {
+                    modifyExercise(workoutsList[listIndex].workoutId)
+                }
+
+                DialogInterface.BUTTON_NEGATIVE -> {
+                }
+            }
+        }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private suspend fun modifyWorkout(workout: Workout) {
+        val db = Firebase.firestore
+
+        val workoutName = suspendCancellableCoroutine<String?> { continuation ->
+            showInputDialog(this@TrainerActivity, "Ingresa el nuevo nombre") { input ->
+                continuation.resume(input, null)
+            }
+        }
+        workout.workoutName = workoutName
+
+        val level = suspendCancellableCoroutine<Int?> { continuation ->
+            showInputDialog(this@TrainerActivity, "Ingresa el nuevo nivel del workout") { input ->
+                input.toIntOrNull()?.let { continuation.resume(it, null) }
+            }
+        }
+        level?.let { workout.level = it }
+
+        val videoUrl = suspendCancellableCoroutine<String?> { continuation ->
+            showInputDialog(this@TrainerActivity, "Ingresa un nuevo link") { input ->
+                continuation.resume(input, null)
+            }
+        }
+        workout.video = videoUrl
+
+        workout.workoutId?.let {
+            db.collection("workouts").document(it)
+                .set(workout)
+                .addOnSuccessListener {
+                    Toast.makeText(
+                        this@TrainerActivity,
+                        "Workout modificado!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                .addOnFailureListener {
+                    Toast.makeText(
+                        this@TrainerActivity,
+                        "No se ha podido modificar el workout",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
         }
     }
 
@@ -142,7 +228,6 @@ class TrainerActivity : AppCompatActivity() {
             false
         }
     }
-
 
     private fun filterWorkouts(level: Int) {
         if (level < workoutsList.size) {
@@ -157,6 +242,11 @@ class TrainerActivity : AppCompatActivity() {
         } else
             Toast.makeText(this, "No hay ningun nivel", Toast.LENGTH_SHORT).show()
 
+    }
+
+    private fun modifyExercise(workoutId: String?) {
+        val db = Firebase.firestore
+        db.collection("workouts").document(workoutId.toString()).collection("workoutExercises").get()
     }
 
     private suspend fun loadWorkouts() {
@@ -245,7 +335,8 @@ class TrainerActivity : AppCompatActivity() {
 
                     val exerciseRestTime = document.getLong("restTime")?.toInt()!!.toString()
 
-                    val exerciseSeriesNumber = document.getLong("seriesNumber")?.toInt()!!.toString()
+                    val exerciseSeriesNumber =
+                        document.getLong("seriesNumber")?.toInt()!!.toString()
 
                     (exerciseList as MutableList<String>).add(
                         ""
