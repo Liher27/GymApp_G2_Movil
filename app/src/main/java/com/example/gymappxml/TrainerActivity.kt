@@ -1,7 +1,9 @@
 package com.example.gymappxml
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Button
@@ -29,6 +31,8 @@ class TrainerActivity : AppCompatActivity() {
     private lateinit var filterText: TextView
     private lateinit var workoutsListView: ListView
     private lateinit var exerciseListView: ListView
+
+    private lateinit var chooser: Intent
 
     private lateinit var workoutsList: List<Workout>
     private lateinit var exerciseList: List<Exercise>
@@ -68,6 +72,14 @@ class TrainerActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+        findViewById<Button>(R.id.videoButton).setOnClickListener {
+            if (videoUrl.isNotEmpty()) {
+                webActionOnClick(videoUrl)
+            } else {
+                Toast.makeText(this, "No hay ningun video", Toast.LENGTH_SHORT).show()
+            }
+        }
+
 
         findViewById<Button>(R.id.trainerModifyButton).setOnClickListener {
             if (workoutSelected) {
@@ -504,5 +516,26 @@ class TrainerActivity : AppCompatActivity() {
             }
         }
 
+    }
+    @SuppressLint("QueryPermissionsNeeded")
+    private fun webActionOnClick(videoUrl: String) {
+        if (videoUrl.isNotEmpty()) {
+            intent = Intent()
+            intent.setAction(Intent.ACTION_VIEW)
+            val intentUrl: String =
+                if (videoUrl.contains("https://")) videoUrl else "https://$videoUrl"
+            intent.setData(Uri.parse(intentUrl))
+
+            chooser = Intent.createChooser(intent, getText(R.string.txt_intent_web))
+
+            if (chooser.resolveActivity(packageManager) != null) {
+                startActivity(chooser)
+                Toast.makeText(this, getText(R.string.txt_ok), Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(this, "El video no tiene una URL valida", Toast.LENGTH_LONG).show()
+            }
+        } else {
+            Toast.makeText(this, getText(R.string.txt_error_1), Toast.LENGTH_LONG).show()
+        }
     }
 }

@@ -59,24 +59,23 @@
         android:backgroundTint="@color/black"
         android:text="@string/buttonBack"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/workoutBackBtn5"
+        app:layout_constraintEnd_toStartOf="@+id/videoButton"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline3"
         app:layout_constraintVertical_bias="0.75" />
 
     <Button
-        android:id="@+id/workoutBackBtn5"
+        android:id="@+id/videoButton"
         android:layout_width="194dp"
-        android:layout_height="52dp"
-        android:layout_marginStart="92dp"
+        android:layout_height="48dp"
         android:backgroundTint="@color/black"
         android:text="@string/videoButtonTxt"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/workoutBackBtn"
         app:layout_constraintTop_toTopOf="@+id/guideline3"
-        app:layout_constraintVertical_bias="0.625" />
+        app:layout_constraintVertical_bias="0.75" />
 
     <Button
         android:id="@+id/trainerModifyButton"
