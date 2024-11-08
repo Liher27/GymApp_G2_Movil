@@ -3,7 +3,6 @@ package com.example.gymappxml
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
@@ -162,9 +161,6 @@ class TrainerActivity : AppCompatActivity() {
                 }
             }
             workout.video = videoUrl
-            Log.e("workout", workout.toString())
-
-
             lifecycleScope.launch {
                 workout.workoutId?.let {
                     db.collection("workouts").document(it).set(workout).await()
@@ -290,32 +286,35 @@ class TrainerActivity : AppCompatActivity() {
             val result =
                 db.collection("workouts").get()
                     .await()
-
-            for (document in result) {
-                val workoutName = document.getString("workoutName")
-                val workoutLevel = document.getLong("level")?.toInt()!!
-                val workoutUrl = document.getString("video")
-                val workoutId = workoutName?.let { getDocumentID(it) }
-                val workout = Workout(
-                    workoutName,
-                    workoutLevel,
-                    workoutId,
-                    workoutUrl
-                )
-                workoutMap[workoutLevel] = workout
-                workoutInfo = "Workout $workoutName"
-                (workoutsList as MutableList<Workout>).add(workout)
-                (workoutsNames as MutableList<String>).add(workoutInfo)
-
-                withContext(Dispatchers.Main) {
-                    workoutsAdapter = ArrayAdapter(
-                        this@TrainerActivity,
-                        android.R.layout.simple_list_item_1,
-                        workoutsNames
+            if (!result.isEmpty) {
+                for (document in result) {
+                    val workoutName = document.getString("workoutName")
+                    val workoutLevel = document.getLong("level")?.toInt()!!
+                    val workoutUrl = document.getString("video")
+                    val workoutId = workoutName?.let { getDocumentID(it) }
+                    val workout = Workout(
+                        workoutName,
+                        workoutLevel,
+                        workoutId,
+                        workoutUrl
                     )
-                    workoutsListView.adapter = workoutsAdapter
+                    workoutMap[workoutLevel] = workout
+                    workoutInfo = "Workout $workoutName"
+                    (workoutsList as MutableList<Workout>).add(workout)
+                    (workoutsNames as MutableList<String>).add(workoutInfo)
+
+                    withContext(Dispatchers.Main) {
+                        workoutsAdapter = ArrayAdapter(
+                            this@TrainerActivity,
+                            android.R.layout.simple_list_item_1,
+                            workoutsNames
+                        )
+                        workoutsListView.adapter = workoutsAdapter
+                    }
                 }
-            }
+            } else
+                Toast.makeText(this@TrainerActivity, "No hay workouts...", Toast.LENGTH_SHORT)
+                    .show()
         }
     }
 
@@ -346,50 +345,62 @@ class TrainerActivity : AppCompatActivity() {
         db.collection("workouts").document(id)
             .collection("workoutExercises").get()
             .addOnSuccessListener { result ->
-                for (document in result) {
-                    val exerciseName =
-                        document.getString("exerciseName")
+                if (!result.isEmpty) {
+                    for (document in result) {
+                        val exerciseName =
+                            document.getString("exerciseName")
 
-                    val exerciseRestTime = document.getLong("restTime")?.toInt()!!.toString()
+                        val exerciseRestTime = document.getLong("restTime")?.toInt()!!.toString()
 
-                    val exerciseSeriesNumber =
-                        document.getLong("seriesNumber")?.toInt()!!.toString()
+                        val exerciseSeriesNumber =
+                            document.getLong("seriesNumber")?.toInt()!!.toString()
 
-                    val exercise = Exercise(
-                        exerciseName,
-                        exerciseRestTime.toInt(),
-                        exerciseSeriesNumber.toInt()
-                    )
-                    (exerciseList as MutableList<Exercise>).add(
-                        exercise
-                    )
-
-                    (exerciseInfo as MutableList<String>).add(
-                        ""
-                    )
-
-                    (exerciseInfo as MutableList<String>).add(
-                        "Nombre del ejercicio: $exerciseName"
-                    )
-                    (exerciseInfo as MutableList<String>).add(
-                        "Tiempo de descanso: $exerciseRestTime minutos"
-                    )
-
-                    (exerciseInfo as MutableList<String>).add(
-                        "Numero de series: $exerciseSeriesNumber"
-                    )
-
-                    exerciseAdapter =
-                        ArrayAdapter(
-                            this@TrainerActivity,
-                            android.R.layout.simple_list_item_1,
-                            exerciseInfo
+                        val exercise = Exercise(
+                            exerciseName,
+                            exerciseRestTime.toInt(),
+                            exerciseSeriesNumber.toInt()
                         )
-                    exerciseListView.adapter = exerciseAdapter
+                        (exerciseList as MutableList<Exercise>).add(
+                            exercise
+                        )
 
-                }
+                        (exerciseInfo as MutableList<String>).add(
+                            ""
+                        )
+
+                        (exerciseInfo as MutableList<String>).add(
+                            "Nombre del ejercicio: $exerciseName"
+                        )
+                        (exerciseInfo as MutableList<String>).add(
+                            "Tiempo de descanso: $exerciseRestTime minutos"
+                        )
+
+                        (exerciseInfo as MutableList<String>).add(
+                            "Numero de series: $exerciseSeriesNumber"
+                        )
+
+                        exerciseAdapter =
+                            ArrayAdapter(
+                                this@TrainerActivity,
+                                android.R.layout.simple_list_item_1,
+                                exerciseInfo
+                            )
+                        exerciseListView.adapter = exerciseAdapter
+
+                    }
+                } else
+                    Toast.makeText(
+                        this@TrainerActivity,
+                        "No hay ejercicios",
+                        Toast.LENGTH_SHORT
+                    ).show()
+            }.addOnFailureListener {
+                Toast.makeText(
+                    this@TrainerActivity,
+                    "No se han cargado los ejercicios",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
-
     }
 
     private fun showInputDialog(
@@ -468,18 +479,19 @@ class TrainerActivity : AppCompatActivity() {
 
     private fun filterWorkouts(level: Int) {
         if (level < workoutsList.size) {
+            (workoutsNames as MutableList<String>).clear()
+
             for (workout in workoutsList) {
                 if (workout.level == level) {
                     (workoutsNames as MutableList<String>).add(workout.workoutName!!)
-                    workoutsAdapter.notifyDataSetChanged()
-                } else {
-                    (workoutsNames as MutableList<String>).remove(workout.workoutName!!)
                 }
             }
-        } else
+            workoutsAdapter.notifyDataSetChanged()
+        } else {
             Toast.makeText(this, "No hay ningun nivel", Toast.LENGTH_SHORT).show()
-
+        }
     }
+
 
     private suspend fun getDocumentID(workoutName: String): String {
         return withContext(Dispatchers.IO) {

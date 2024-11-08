@@ -120,17 +120,17 @@ class WorkoutsActivity : AppCompatActivity() {
 
     private fun filterWorkouts(level: Int) {
         if (level < workoutsList.size) {
+            (workoutsNames as MutableList<String>).clear()
+
             for (workout in workoutsList) {
                 if (workout.level == level) {
                     (workoutsNames as MutableList<String>).add(workout.workoutName!!)
-                    workoutsAdapter.notifyDataSetChanged()
-                } else {
-                    (workoutsNames as MutableList<String>).remove(workout.workoutName!!)
                 }
             }
-        } else
+            workoutsAdapter.notifyDataSetChanged()
+        } else {
             Toast.makeText(this, "No hay ningun nivel", Toast.LENGTH_SHORT).show()
-
+        }
     }
 
     private suspend fun loadWorkouts() {
