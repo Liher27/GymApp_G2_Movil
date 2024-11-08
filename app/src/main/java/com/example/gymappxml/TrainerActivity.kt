@@ -32,9 +32,11 @@ class TrainerActivity : AppCompatActivity() {
     private lateinit var exerciseListView: ListView
 
     private lateinit var workoutsList: List<Workout>
+    private lateinit var exerciseList: List<Exercise>
     private lateinit var workoutsNames: List<String>
-    private lateinit var exerciseList: List<String>
+    private lateinit var exerciseInfo: List<String>
     private lateinit var workoutsAdapter: ArrayAdapter<String>
+    private lateinit var exerciseAdapter: ArrayAdapter<String>
     private lateinit var workoutMap: HashMap<Int, Workout>
 
     private lateinit var keyid: String
@@ -43,14 +45,17 @@ class TrainerActivity : AppCompatActivity() {
     private lateinit var id: String
 
     private var workoutSelected: Boolean = false
+    private var exerciseSelected: Boolean = false
 
     private var listIndex: Int = 0
+    private var exerciseListIndex: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_trainer)
         keyid = intent.getStringExtra("id") ?: "default_value"
         filterText = findViewById(R.id.editNumberText)
+        exerciseListView = findViewById(R.id.exerciseView)
         videoUrl = ""
 
         lifecycleScope.launch {
@@ -70,15 +75,23 @@ class TrainerActivity : AppCompatActivity() {
                 lifecycleScope.launch {
                     modifyWorkout(workoutsList[listIndex])
                 }
+            } else if (exerciseSelected) {
+                lifecycleScope.launch {
+                    modifyExercise(exerciseList[exerciseListIndex])
+                }
             } else
                 Toast.makeText(this, "No has seleccionado ningún workout", Toast.LENGTH_SHORT)
                     .show()
         }
 
         findViewById<Button>(R.id.trainerDeleteBtn).setOnClickListener {
-            lifecycleScope.launch {
-                deleteWorkout(workoutsList[listIndex].workoutId.toString())
-            }
+            if (workoutSelected) {
+                lifecycleScope.launch {
+                    deleteWorkout(workoutsList[listIndex].workoutId.toString())
+                }
+            } else
+                Toast.makeText(this, "No has seleccionado ningún workout", Toast.LENGTH_SHORT)
+                    .show()
         }
 
         findViewById<Button>(R.id.trainerAddBtn).setOnClickListener {
@@ -102,9 +115,15 @@ class TrainerActivity : AppCompatActivity() {
 
         workoutsListView.setOnItemClickListener { _, _, position, _ ->
             workoutSelected = true
+            exerciseSelected = false
             listIndex = position
             loadExercises(listIndex)
             videoUrl = workoutsList[listIndex].video.toString()
+        }
+        exerciseListView.setOnItemClickListener { _, _, position, _ ->
+            exerciseSelected = true
+            workoutSelected = false
+            exerciseListIndex = position
         }
     }
 
@@ -154,7 +173,7 @@ class TrainerActivity : AppCompatActivity() {
                         addMoreExercises = suspendCancellableCoroutine { continuation ->
                             dialogYesOrNo(
                                 this@TrainerActivity,
-                                workout.workoutId
+                                workout.workoutId!!
                             ) { addAnother ->
                                 continuation.resume(addAnother, null)
                             }
@@ -205,17 +224,6 @@ class TrainerActivity : AppCompatActivity() {
                 workout.workoutId?.let {
                     db.collection("workouts").document(it)
                         .set(workout).await()
-                    var addMoreExercises = true
-                    while (addMoreExercises) {
-                        addMoreExercises = suspendCancellableCoroutine { continuation ->
-                            dialogYesOrNo(
-                                this@TrainerActivity,
-                                workout.workoutId
-                            ) { addAnother ->
-                                continuation.resume(addAnother, null)
-                            }
-                        }
-                    }
                     Toast.makeText(
                         this@TrainerActivity,
                         "Workout modificado!",
@@ -312,26 +320,26 @@ class TrainerActivity : AppCompatActivity() {
     }
 
     private fun loadExercises(index: Int) {
-        exerciseListView = findViewById(R.id.exerciseView)
-        exerciseList = mutableListOf()
+        exerciseInfo = mutableListOf()
         val db = Firebase.firestore
         id = workoutsList[index].workoutId.toString()
         val level = workoutsList[index].level
+        exerciseList = mutableListOf()
         val videoUrl = workoutsList[index].video
 
-        (exerciseList as MutableList<String>).add(
+        (exerciseInfo as MutableList<String>).add(
             "Nivel: $level "
         )
 
-        (exerciseList as MutableList<String>).add(
+        (exerciseInfo as MutableList<String>).add(
             "Video: $videoUrl"
         )
 
-        (exerciseList as MutableList<String>).add(
+        (exerciseInfo as MutableList<String>).add(
             ""
         )
 
-        (exerciseList as MutableList<String>).add(
+        (exerciseInfo as MutableList<String>).add(
             "Ejercicios:"
         )
 
@@ -347,28 +355,37 @@ class TrainerActivity : AppCompatActivity() {
                     val exerciseSeriesNumber =
                         document.getLong("seriesNumber")?.toInt()!!.toString()
 
-                    (exerciseList as MutableList<String>).add(
+                    val exercise = Exercise(
+                        exerciseName,
+                        exerciseRestTime.toInt(),
+                        exerciseSeriesNumber.toInt()
+                    )
+                    (exerciseList as MutableList<Exercise>).add(
+                        exercise
+                    )
+
+                    (exerciseInfo as MutableList<String>).add(
                         ""
                     )
 
-                    (exerciseList as MutableList<String>).add(
+                    (exerciseInfo as MutableList<String>).add(
                         "Nombre del ejercicio: $exerciseName"
                     )
-                    (exerciseList as MutableList<String>).add(
+                    (exerciseInfo as MutableList<String>).add(
                         "Tiempo de descanso: $exerciseRestTime minutos"
                     )
 
-                    (exerciseList as MutableList<String>).add(
+                    (exerciseInfo as MutableList<String>).add(
                         "Numero de series: $exerciseSeriesNumber"
                     )
 
-                    val adapter =
+                    exerciseAdapter =
                         ArrayAdapter(
-                            this,
+                            this@TrainerActivity,
                             android.R.layout.simple_list_item_1,
-                            exerciseList
+                            exerciseInfo
                         )
-                    exerciseListView.adapter = adapter
+                    exerciseListView.adapter = exerciseAdapter
 
                 }
             }
@@ -394,16 +411,17 @@ class TrainerActivity : AppCompatActivity() {
         }.show()
     }
 
+
     private fun dialogYesOrNo(
         context: Context,
-        workoutId: String?,
+        workoutId: String,
         onYesClicked: (Boolean) -> Unit
     ) {
         val builder = AlertDialog.Builder(context)
         builder.setPositiveButton("Yes") { _, _ ->
             lifecycleScope.launch {
                 val exercise = Exercise(null, null, null)
-                createExercise(workoutId.toString(), exercise)
+                createExercise(workoutId, exercise)
             }
             onYesClicked(true)
         }
@@ -411,8 +429,41 @@ class TrainerActivity : AppCompatActivity() {
             onYesClicked(false)
         }
         val alert = builder.create()
-        alert.setMessage("Do you want to add an exercise?")
+        alert.setMessage("Quieres crear un ejercicio nuevo?")
         alert.show()
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private suspend fun modifyExercise(exercise: Exercise) {
+        val db = Firebase.firestore
+        val exerciseId = exercise.exerciseName
+        val exerciseName = suspendCancellableCoroutine<String?> { continuation ->
+            showInputDialog(this@TrainerActivity, "Ingresa el nuevo nombre") { input ->
+                continuation.resume(input, null)
+            }
+        }
+        if (exerciseName.toString().isNotEmpty())
+            exercise.exerciseName = exerciseName
+
+        val seriesNumber = suspendCancellableCoroutine<Int?> { continuation ->
+            showInputDialog(this@TrainerActivity, "Ingresa las series del ejercicio") { input ->
+                input.toIntOrNull()?.let { continuation.resume(it, null) }
+            }
+        }
+        if (seriesNumber.toString().isNotEmpty())
+            seriesNumber?.let { exercise.seriesNumber = it }
+
+        val restTime = suspendCancellableCoroutine<Int?> { continuation ->
+            showInputDialog(this@TrainerActivity, "Ingresa las series del ejercicio") { input ->
+                input.toIntOrNull()?.let { continuation.resume(it, null) }
+            }
+        }
+        if (restTime.toString().isNotEmpty())
+            restTime?.let { exercise.restTime = it }
+
+        db.collection("workouts").document(workoutsList[listIndex].workoutId.toString())
+            .collection("workoutExercises").document(exerciseId.toString()).set(exercise)
+
     }
 
     private fun filterWorkouts(level: Int) {
