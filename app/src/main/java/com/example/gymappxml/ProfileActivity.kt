@@ -1,4 +1,5 @@
 package com.example.gymappxml
+
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -12,6 +13,7 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
@@ -20,22 +22,20 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class ProfileActivity : AppCompatActivity() {
-    private lateinit var userFiled: EditText
-    private lateinit var userNameFiled: EditText
-    private lateinit var userSurnameFiled: EditText
-    private lateinit var userEmailFiled: EditText
-    private lateinit var userBirtyDateFiled: EditText
+    private lateinit var userField: EditText
+    private lateinit var userNameField: EditText
+    private lateinit var userSurnameField: EditText
+    private lateinit var userEmailField: EditText
+    private lateinit var userBirthDateField: EditText
     private lateinit var userType: EditText
 
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var spinnerLanguage: Spinner
-    private lateinit var spinnerTheme : Spinner
-    private lateinit var editor : Editor
-    private lateinit var useride : String
+    private lateinit var spinnerTheme: Spinner
+    private lateinit var editor: Editor
+    private lateinit var useride: String
     private lateinit var user: User
-
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,11 +43,11 @@ class ProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
         useride = intent.getStringExtra("iduser").toString()
-        userFiled = findViewById(R.id.userIdFiled)
-        userNameFiled = findViewById(R.id.NameFiled)
-        userSurnameFiled = findViewById(R.id.SurNameFiled)
-        userEmailFiled = findViewById(R.id.emailFiled)
-        userBirtyDateFiled = findViewById(R.id.dateFiled)
+        userField = findViewById(R.id.userIdFiled)
+        userNameField = findViewById(R.id.NameFiled)
+        userSurnameField = findViewById(R.id.SurNameFiled)
+        userEmailField = findViewById(R.id.emailFiled)
+        userBirthDateField = findViewById(R.id.dateFiled)
         userType = findViewById(R.id.editText4)
         spinnerLanguage = findViewById(R.id.spinner2)
         spinnerTheme = findViewById(R.id.spinner3)
@@ -81,16 +81,15 @@ class ProfileActivity : AppCompatActivity() {
             spinnerLanguage.adapter = adapter
         }
 
-        spinnerTheme.onItemSelectedListener = object  : AdapterView.OnItemSelectedListener{
+        spinnerTheme.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                val selectedThemeId = when(p2){
-                    0 -> R.style.Theme_GymAppXML
-                    1 -> R.style.lightTheme
-                    else -> R.style.Theme_GymAppXML
+                val selectedThemeId = when (p2) {
+                    0 -> R.style.lightTheme
+                    1 -> R.style.nightTheme
+                    else -> R.style.nightTheme
                 }
                 sharedPreferences.edit().putInt("selected_Theme", selectedThemeId).apply()
                 setTheme(selectedThemeId)
-
 
 
             }
@@ -104,14 +103,12 @@ class ProfileActivity : AppCompatActivity() {
         setupLanguageSpinner()
         showUserData()
         disableTextFiled()
-        Log.i("ididid","el id es $useride")
-
-
     }
+
     private fun setupLanguageSpinner() {
         val savedLanguage = sharedPreferences.getString("selected_language", "en")
         val position = when (savedLanguage) {
-            "en" ->0
+            "en" -> 0
             "es" -> 1
             else -> 0
         }
@@ -128,7 +125,8 @@ class ProfileActivity : AppCompatActivity() {
                 val currentLanguage = sharedPreferences.getString("selected_language", "es")
 
                 if (currentLanguage != selectedLanguage) {
-                    sharedPreferences.edit().putString("selected_language", selectedLanguage).apply()
+                    sharedPreferences.edit().putString("selected_language", selectedLanguage)
+                        .apply()
                     setLocale(selectedLanguage, context = baseContext)
                     recreate()
                 }
@@ -149,57 +147,60 @@ class ProfileActivity : AppCompatActivity() {
                         val userName = document.getString("name")
                         val userSurname = document.getString("surname")
                         val userEmail = document.getString("mail")
-                        val userBirtyDate = document.getTimestamp("birthDate")
+                        val userBirthDate = document.getTimestamp("birthDate")
+                        Log.e("user", userBirthDate.toString())
                         val isTrainer = document.getBoolean("trainer")
-                        val formattedDate = userBirtyDate?.toDate()?.let {
+                        val formattedDate = userBirthDate?.toDate()?.let {
                             SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(it)
-                        }
-
-                        user = userName?.let {
-                            User(
-                                it,
+                            Log.e("it", it.toString())
+                            user = User(
+                                userName.toString(),
                                 userSurname,
                                 userEmail,
-                                formattedDate,
+                                it.toString(),
                                 isTrainer
                             )
-                        }!!
+                        }
+
                         loadUserInfo(user)
 
-                        editor.putString("thisId",useride)
+                        editor.putString("thisId", useride)
                         editor.apply()
 
                     }
                 }
-                .addOnFailureListener { exception ->
-                    Log.e("showUserData", "Error getting user data: ", exception)
+                .addOnFailureListener { _ ->
+                    Toast.makeText(
+                        this@ProfileActivity,
+                        "Error al cargar los datos",
+                        Toast.LENGTH_SHORT
+                    ).show()
 
                 }
         }
     }
-    private fun loadUserInfo (user: User){
-        userFiled.setText(useride)
-        userNameFiled.setText(user.name)
-        userSurnameFiled.setText(user.surname)
-        userEmailFiled.setText(user.mail)
-        val formattedDate = user.birthDate?.let {
-            SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(it)
-        }
-        userBirtyDateFiled.setText(formattedDate)
-        userType.setText(if(user.trainer == true)"Entrenador" else "Cliente")
+
+    private fun loadUserInfo(user: User) {
+        userField.setText(useride)
+        userNameField.setText(user.name)
+        userSurnameField.setText(user.surname)
+        userEmailField.setText(user.mail)
+        userBirthDateField.setText(user.birthDate.toString())
+        userType.setText(if (user.trainer == true) "Entrenador" else "Cliente")
 
     }
 
     private fun disableTextFiled() {
-        userFiled.isEnabled = false
-        userNameFiled.isEnabled = false
-        userSurnameFiled.isEnabled = false
-        userEmailFiled.isEnabled = false
-        userBirtyDateFiled.isEnabled = false
+        userField.isEnabled = false
+        userNameField.isEnabled = false
+        userSurnameField.isEnabled = false
+        userEmailField.isEnabled = false
+        userBirthDateField.isEnabled = false
         userType.isEnabled = false
     }
 
 }
+
 private fun setLocale(languageCode: String, context: Context) {
     val locale = Locale(languageCode)
     Locale.setDefault(locale)

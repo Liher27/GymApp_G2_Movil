@@ -107,7 +107,6 @@
         android:id="@+id/textViewErrekaFitRregistrer"
         android:layout_width="214dp"
         android:layout_height="41dp"
-        android:background="@color/dark_gray"
         android:text="@string/register"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"

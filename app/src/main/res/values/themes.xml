@@ -1,17 +1,18 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Base.Theme.GymAppXML" parent="Theme.Material3.DayNight.NoActionBar">
-    <item name="android:background">@color/dark_gray</item>
+    <style name="lightTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:background">@color/lightBackground</item>
+        <item name="android:textColor">#2f4f4f</item>
+        <item name="android:editTextColor">#2f4f4f</item>
     </style>
 
-<style name="Theme.GymAppXML" parent="Base.Theme.GymAppXML" />
-    <style name="lightTheme" parent = "Base.Theme.GymAppXML">
-        <item name="android:background">@color/dark_gray</item>
+    <style name="spinner_style" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/black</item>
-        <item name="android:editTextColor">@color/black</item>
     </style>
-    <style name="spinner_style">
+
+    <style name="button_style" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/white</item>
+        <item name="android:background">@color/darkBackground</item>
     </style>
 
 </resources>
