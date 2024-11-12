@@ -39,6 +39,10 @@ class ProfileActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        sharedPreferences = getSharedPreferences("sharedPreferences", MODE_PRIVATE)
+
+        val selectedThemeId = sharedPreferences.getInt("selected_Theme", R.style.nightTheme)
+        setTheme(selectedThemeId)
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
@@ -52,7 +56,6 @@ class ProfileActivity : AppCompatActivity() {
         userType = findViewById(R.id.editText4)
         spinnerLanguage = findViewById(R.id.spinner2)
         spinnerTheme = findViewById(R.id.spinner3)
-        sharedPreferences = getSharedPreferences("sharedPreferences", MODE_PRIVATE)
         editor = sharedPreferences.edit()
         val savedLanguage = sharedPreferences.getString("selected_language", "es")
         setLocale(savedLanguage ?: "es", this)
@@ -84,16 +87,15 @@ class ProfileActivity : AppCompatActivity() {
 
         spinnerTheme.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                val selectedThemeId = when (p2) {
-                    0 -> R.style.lightTheme
-                    1 -> R.style.nightTheme
-                    else -> R.style.nightTheme
+                val themeId = when (p2) {
+                    0 -> R.style.nightTheme
+                    1 -> R.style.lightTheme
+                    else -> R.style.lightTheme
                 }
-                sharedPreferences.edit().putInt("selected_Theme", selectedThemeId).apply()
-                setTheme(selectedThemeId)
-
+                sharedPreferences.edit().putInt("selected_Theme", themeId).apply()
 
             }
+
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
                 TODO("Not yet implemented")

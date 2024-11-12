@@ -100,7 +100,6 @@
             android:id="@+id/profileBackButton"
             android:layout_width="161dp"
             android:layout_height="48dp"
-            android:backgroundTint="@color/black"
             android:text="@string/buttonBack"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

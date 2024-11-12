@@ -57,7 +57,7 @@
         <item>Español</item>
     </string-array>
     <string-array name="themeMode">
-        <item>Dark</item>
         <item>Light</item>
+        <item>Dark</item>
     </string-array>
 </resources>
