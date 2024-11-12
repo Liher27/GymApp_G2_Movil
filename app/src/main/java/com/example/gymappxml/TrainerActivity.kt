@@ -132,9 +132,20 @@ class TrainerActivity : AppCompatActivity() {
             videoUrl = workoutsList[listIndex].video.toString()
         }
         exerciseListView.setOnItemClickListener { _, _, position, _ ->
+            var relativeIndex = (position - 4) / 5
+
+            if (position < 4) {
+                relativeIndex = 0
+            }
+
+            val slotWithinExercise = (position - 4) % 5
+            if (slotWithinExercise == 0) {
+                relativeIndex = 0
+            }
+
             exerciseSelected = true
             workoutSelected = false
-            exerciseListIndex = position
+            exerciseListIndex = relativeIndex
         }
     }
 
@@ -517,13 +528,15 @@ class TrainerActivity : AppCompatActivity() {
         }
 
     }
+
     @SuppressLint("QueryPermissionsNeeded")
     private fun webActionOnClick(videoUrl: String) {
         if (videoUrl.isNotEmpty()) {
             intent = Intent()
             intent.setAction(Intent.ACTION_VIEW)
-            val intentUrl: String =
-                if (videoUrl.contains("https://")) videoUrl else "https://$videoUrl"
+            val intentUrl =
+                if (videoUrl.startsWith("http://") || videoUrl.startsWith("https://")) videoUrl
+                else "https://$videoUrl"
             intent.setData(Uri.parse(intentUrl))
 
             chooser = Intent.createChooser(intent, getText(R.string.txt_intent_web))

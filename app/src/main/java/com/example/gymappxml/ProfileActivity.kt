@@ -42,6 +42,7 @@ class ProfileActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
+
         useride = intent.getStringExtra("iduser").toString()
         userField = findViewById(R.id.userIdFiled)
         userNameField = findViewById(R.id.NameFiled)
@@ -102,7 +103,7 @@ class ProfileActivity : AppCompatActivity() {
 
         setupLanguageSpinner()
         showUserData()
-        disableTextFiled()
+        disableTextField()
     }
 
     private fun setupLanguageSpinner() {
@@ -148,19 +149,16 @@ class ProfileActivity : AppCompatActivity() {
                         val userSurname = document.getString("surname")
                         val userEmail = document.getString("mail")
                         val userBirthDate = document.getTimestamp("birthDate")
-                        Log.e("user", userBirthDate.toString())
                         val isTrainer = document.getBoolean("trainer")
-                        val formattedDate = userBirthDate?.toDate()?.let {
-                            SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(it)
-                            Log.e("it", it.toString())
-                            user = User(
-                                userName.toString(),
-                                userSurname,
-                                userEmail,
-                                it.toString(),
-                                isTrainer
-                            )
-                        }
+
+                        user = User(
+                            userName.toString(),
+                            userSurname,
+                            userEmail,
+                            null,
+                            isTrainer,
+                            userBirthDate?.toDate()
+                        )
 
                         loadUserInfo(user)
 
@@ -185,12 +183,15 @@ class ProfileActivity : AppCompatActivity() {
         userNameField.setText(user.name)
         userSurnameField.setText(user.surname)
         userEmailField.setText(user.mail)
-        userBirthDateField.setText(user.birthDate.toString())
+        val formattedDate = user.birthDate?.let {
+            SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(it)
+        }
+        userBirthDateField.setText(formattedDate)
         userType.setText(if (user.trainer == true) "Entrenador" else "Cliente")
 
     }
 
-    private fun disableTextFiled() {
+    private fun disableTextField() {
         userField.isEnabled = false
         userNameField.isEnabled = false
         userSurnameField.isEnabled = false
