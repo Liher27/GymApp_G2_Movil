@@ -263,6 +263,11 @@ class TrainerActivity : AppCompatActivity() {
     private suspend fun deleteWorkout(workoutId: String): Boolean {
         return try {
             Firebase.firestore.collection("workouts").document(workoutId).delete().await()
+            Toast.makeText(
+                this@TrainerActivity,
+                "Workout Eliminado",
+                Toast.LENGTH_SHORT
+            ).show()
             true
         } catch (e: Exception) {
             false
