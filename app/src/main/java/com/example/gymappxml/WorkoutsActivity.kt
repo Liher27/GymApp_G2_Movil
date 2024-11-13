@@ -4,14 +4,12 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.os.Looper
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isEmpty
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
@@ -61,10 +59,6 @@ class WorkoutsActivity : AppCompatActivity() {
         lifecycleScope.launch {
             loadWorkouts()
             isTrainer = userIsTrainer()
-        }
-        
-        if (workoutsListView.isEmpty()) {
-            Toast.makeText(this, "No hay ningun workout", Toast.LENGTH_SHORT).show()
         }
 
         findViewById<Button>(R.id.trainerButton).setOnClickListener {
@@ -153,6 +147,7 @@ class WorkoutsActivity : AppCompatActivity() {
                 val result =
                     db.collection("users").document(id).collection("userHistory_0").get()
                         .await()
+
                 for (document in result) {
                     val workoutNameRef = document.getDocumentReference("workoutName")
                     val workoutLevelRef = document.getDocumentReference("workoutLevel")
