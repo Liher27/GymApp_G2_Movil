@@ -9,16 +9,27 @@
     tools:layout_editor_absoluteX="-13dp"
     tools:layout_editor_absoluteY="-7dp">
 
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="177dp"
+        android:layout_height="148dp"
+        android:contentDescription="@string/todo"
+        app:layout_constraintBottom_toTopOf="@+id/textViewErrekaFitRregistrer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.211"
+        app:srcCompat="@mipmap/errekafit_foreground"
+        tools:ignore="ContentDescription,ImageContrastCheck" />
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="214dp"
         android:layout_height="28dp"
-        android:textColor="@color/light_gray"
         android:text="@string/registerToLogin"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button2"
         tools:ignore="HardcodedText,TextSizeCheck" />
@@ -31,13 +42,10 @@
         android:hint="@string/editTextSurname"
         android:inputType="text"
         android:minHeight="48dp"
-        android:textColorHint="#546E7A"
         app:layout_constraintBottom_toTopOf="@+id/editTextTextEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextname"
-        app:layout_constraintVertical_bias="0.5"
         tools:ignore="Autofill,HardcodedText,LabelFor" />
 
     <EditText
@@ -48,13 +56,10 @@
         android:hint="@string/editTextTextEmailAddress"
         android:inputType="textEmailAddress"
         android:minHeight="48dp"
-        android:textColorHint="#546E7A"
         app:layout_constraintBottom_toTopOf="@+id/editTextTextPassword"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextSurname"
-        app:layout_constraintVertical_bias="0.5"
         tools:ignore="Autofill,LabelFor,SpeakableTextPresentCheck" />
 
     <Spinner
@@ -64,10 +69,8 @@
         android:hint="@string/spinner"
         app:layout_constraintBottom_toTopOf="@+id/button2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextDate"
-        app:layout_constraintVertical_bias="0.5" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextDate" />
 
     <EditText
         android:id="@+id/editTextDate"
@@ -77,14 +80,26 @@
         android:hint="@string/editTextDate"
         android:inputType="date"
         android:minHeight="48dp"
-        android:textColorHint="#546E7A"
         app:layout_constraintBottom_toTopOf="@+id/spinner"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword"
-        app:layout_constraintVertical_bias="0.5"
         tools:ignore="Autofill,LabelFor,SpeakableTextPresentCheck" />
+
+    <EditText
+        android:id="@+id/loginTextname"
+        android:layout_width="214dp"
+        android:layout_height="51dp"
+        android:ems="10"
+        android:hint="@string/login"
+        android:inputType="text"
+        android:minHeight="48dp"
+        app:layout_constraintBottom_toTopOf="@+id/editTextname"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewErrekaFitRregistrer"
+        tools:ignore="Autofill,DuplicateSpeakableTextCheck,HardcodedText,LabelFor" />
 
     <EditText
         android:id="@+id/editTextname"
@@ -94,13 +109,10 @@
         android:hint="@string/editTextname"
         android:inputType="text"
         android:minHeight="48dp"
-        android:textColorHint="#546E7A"
         app:layout_constraintBottom_toTopOf="@+id/editTextSurname"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2"
-        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintTop_toBottomOf="@+id/loginTextname"
         tools:ignore="Autofill,DuplicateSpeakableTextCheck,HardcodedText,LabelFor" />
 
     <TextView
@@ -110,15 +122,11 @@
         android:text="@string/register"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="#FFC107"
         android:textSize="34sp"
-        app:layout_constraintBottom_toTopOf="@+id/imageView2"
+        app:layout_constraintBottom_toTopOf="@+id/loginTextname"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5"
-        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2"
         tools:ignore="TextSizeCheck" />
 
     <Button
@@ -126,12 +134,10 @@
         android:layout_width="214dp"
         android:layout_height="48dp"
         android:text="Registrarse"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline6"
-        app:layout_constraintVertical_bias="0.503"
+        app:layout_constraintTop_toBottomOf="@+id/spinner"
         tools:ignore="HardcodedText" />
 
     <EditText
@@ -142,27 +148,11 @@
         android:hint="@string/editTextTextPassword"
         android:inputType="textPassword"
         android:minHeight="48dp"
-        android:textColorHint="#546E7A"
         app:layout_constraintBottom_toTopOf="@+id/editTextDate"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextEmailAddress"
-        app:layout_constraintVertical_bias="0.5"
         tools:ignore="Autofill,LabelFor,SpeakableTextPresentCheck" />
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="214dp"
-        android:layout_height="174dp"
-        android:layout_marginBottom="9dp"
-        app:layout_constraintBottom_toTopOf="@+id/editTextname"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextname"
-        tools:ignore="ContentDescription,ImageContrastCheck"
-        tools:srcCompat="@tools:sample/avatars" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline6"
