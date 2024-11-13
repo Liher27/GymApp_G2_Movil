@@ -22,7 +22,10 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var rememberMe: CheckBox
     private lateinit var perf: SharedPreferences
     private var saveUser by Delegates.notNull<Boolean>()
+    private var userLoged :Boolean = true
     private lateinit var editor: Editor
+    private lateinit var newMain : String
+    private lateinit var newPass : String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -31,16 +34,27 @@ class LoginActivity : AppCompatActivity() {
         editor = perf.edit()
         emailEditText = findViewById(R.id.editTextLogin)
         passEditText = findViewById(R.id.editTextPassword)
-
-
         db = FirebaseFirestore.getInstance()
         rememberMe = findViewById(R.id.checkBox)
+
+        newMain = intent.getStringExtra("newUserMail").toString()
+        newPass = intent.getStringExtra("newUserPass").toString()
+
 
 
         if (saveUser) {
             emailEditText.setText(perf.getString("mail", null))
             passEditText.setText(perf.getString("pass", null))
             rememberMe.isChecked
+        }
+
+        if(newMain.isNotEmpty() && newPass.isNotEmpty()) {
+
+            editor.putString("NewUserMail", newMain)
+            editor.putString("NewUserPass", newPass)
+
+            emailEditText.setText(perf.getString("NewUserMail", null))
+            passEditText.setText(perf.getString("NewUserPass", null))
         }
 
 
@@ -70,6 +84,7 @@ class LoginActivity : AppCompatActivity() {
 
 
     private fun checkUserCredentials(mail: String, pass: String) {
+
         db.collection("users").whereEqualTo("mail", mail)
             .get()
             .addOnSuccessListener { result ->
